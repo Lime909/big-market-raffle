@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * @author Lime
- * @description
+ * @description 抽奖策略奖品明细配置 - 概率、规则
  * @date 2024-06-03 11:25:17
  */
 

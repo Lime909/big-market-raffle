@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author Lime
- * @description
+ * @description 奖品表DAO
  * @date 2024-06-03 09:40:28
  */
 @Mapper

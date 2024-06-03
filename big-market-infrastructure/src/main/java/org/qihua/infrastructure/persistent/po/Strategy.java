@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * @author Lime
- * @description
+ * @description 抽奖策略
  * @date 2024-06-03 11:26:00
  */
 @Data
