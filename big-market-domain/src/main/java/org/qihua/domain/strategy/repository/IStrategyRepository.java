@@ -1,6 +1,8 @@
 package org.qihua.domain.strategy.repository;
 
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
+import org.qihua.domain.strategy.model.entity.StrategyEntity;
+import org.qihua.domain.strategy.model.entity.StrategyRuleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,15 @@ import java.util.Map;
 public interface IStrategyRepository {
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
-    void storeStrategyAwardSearchRateTable(Long strategyId, int rateRange, Map<Integer, Integer> shuffleAwardSearchTable);
+    void storeStrategyAwardSearchRateTable(String key, int rateRange, Map<Integer, Integer> shuffleAwardSearchTable);
+
+    Integer getStrategyAwardAssemble(String key, int rateKey);
 
     int getRateRange(Long strategyId);
 
-    Integer getStrategyAwardAssemble(Long strategyId, int rateKey);
+    int getRateRange(String key);
+
+    StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
+
+    StrategyRuleEntity queryStrategyRule(Long strategyId, String ruleModel);
 }
