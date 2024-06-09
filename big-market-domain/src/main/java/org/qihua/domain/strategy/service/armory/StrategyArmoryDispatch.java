@@ -31,10 +31,10 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
 
 
     @Override
-    public boolean assembleStrategy(Long strategyId) {
+    public boolean assembleLotteryStrategy(Long strategyId) {
         // 1.查询策略配置
         List<StrategyAwardEntity> strategyAwardEntities = repository.queryStrategyAwardList(strategyId);
-        assembleStrategy(String.valueOf(strategyId), strategyAwardEntities);
+        assembleLotteryStrategy(String.valueOf(strategyId), strategyAwardEntities);
 
         // 2.权重策略配置 - rule_model权重规则
         StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
@@ -52,13 +52,13 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
             List<Integer> ruleValues = ruleWeightValue.get(key);
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesClone.removeIf(entity -> !ruleValues.contains(entity.getAwardId()));
-            assembleStrategy(String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(key), strategyAwardEntitiesClone);
+            assembleLotteryStrategy(String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(key), strategyAwardEntitiesClone);
         }
 
         return true;
     }
 
-    private void assembleStrategy(String key, List<StrategyAwardEntity> strategyAwardEntities) {
+    private void assembleLotteryStrategy(String key, List<StrategyAwardEntity> strategyAwardEntities) {
         // 1.获取最小概率值
         BigDecimal minAwardRate = strategyAwardEntities.stream()
                 .map(StrategyAwardEntity::getAwardRate)
@@ -104,6 +104,11 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
     @Override
     public Integer getRandomAwardId(Long strategyId, String ruleWeight) {
         String key = String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(ruleWeight);
+        return getRandomAwardId(key);
+    }
+
+    @Override
+    public Integer getRandomAwardId(String key){
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rateRange = repository.getRateRange(key);
         // 通过生成的随机值，获取概率值奖品查找表的结果
