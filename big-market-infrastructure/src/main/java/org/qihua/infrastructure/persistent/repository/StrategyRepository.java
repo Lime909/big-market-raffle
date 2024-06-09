@@ -3,6 +3,7 @@ package org.qihua.infrastructure.persistent.repository;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.model.entity.StrategyRuleEntity;
+import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.infrastructure.persistent.dao.IStrategyAwardDao;
 import org.qihua.infrastructure.persistent.dao.IStrategyDao;
@@ -92,10 +93,13 @@ public class StrategyRepository implements IStrategyRepository {
         // 优先从缓存获取
         String key = Constants.RedisKey.STRATEGY_KEY + strategyId;
         StrategyEntity strategyEntity = redisService.getValue(key);
-        if(strategyEntity != null) {
+        if (strategyEntity != null) {
             return strategyEntity;
         }
         Strategy strategy = strategyDao.queryStrategyByStrategyId(strategyId);
+        if (strategy == null) {
+            return StrategyEntity.builder().build();
+        }
         strategyEntity = StrategyEntity.builder()
                 .strategyId(strategy.getStrategyId())
                 .strategyDesc(strategy.getStrategyDesc())
@@ -129,5 +133,16 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRule.setAwardId(awardId);
         strategyRule.setRuleModel(ruleModel);
         return strategyRuleDao.queryStrategyRuleValue(strategyRule);
+    }
+
+    @Override
+    public StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Integer awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        String ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
+        return StrategyAwardRuleModelVO.builder()
+                .ruleModels(ruleModels)
+                .build();
     }
 }
