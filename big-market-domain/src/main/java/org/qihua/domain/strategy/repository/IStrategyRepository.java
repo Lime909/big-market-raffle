@@ -3,6 +3,7 @@ package org.qihua.domain.strategy.repository;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.model.entity.StrategyRuleEntity;
+import org.qihua.domain.strategy.model.volobj.RuleTreeVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 
 import java.util.List;
@@ -33,4 +34,13 @@ public interface IStrategyRepository {
     String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel);
 
     StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Integer awardId);
+
+    /**
+     * 根据规则树ID，查询树结构信息
+     *
+     * @param treeId 规则树ID
+     * @return 树结构信息
+     */
+    RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
+
 }

@@ -1,5 +1,7 @@
 package org.qihua.domain.strategy.service.rule.chain;
 
+import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
+
 /**
  * @author Lime
  * @description 抽奖策略规则责任链接口
@@ -10,7 +12,7 @@ public interface ILogicChain extends ILogicChainArmory{
      *
      * @param userId
      * @param strategyId
-     * @return awardId
+     * @return 奖品对象
      */
-    Integer logic(String userId, Long strategyId);
+    DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId);
 }

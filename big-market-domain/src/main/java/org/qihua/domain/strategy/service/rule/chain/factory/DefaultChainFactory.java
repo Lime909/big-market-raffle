@@ -1,5 +1,6 @@
 package org.qihua.domain.strategy.service.rule.chain.factory;
 
+import lombok.*;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.rule.chain.ILogicChain;
@@ -28,7 +29,7 @@ public class DefaultChainFactory {
         String[] ruleModels = strategy.ruleModels();
 
         if(ruleModels == null || ruleModels.length == 0) {
-            return logicChainMap.get("default");
+            return logicChainMap.get(LogicModel.RULE_DEFAULT.getCode());
         }
 
         ILogicChain logicChain = logicChainMap.get(ruleModels[0]);
@@ -38,9 +39,29 @@ public class DefaultChainFactory {
             current = current.appendNext(nextChain);
         }
 
-        current.appendNext(logicChainMap.get("default"));
+        current.appendNext(logicChainMap.get(LogicModel.RULE_DEFAULT.getCode()));
 
         return logicChain;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StrategyAwardVO {
+        private Integer awardId;
+        private String logicModel;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum LogicModel {
+        RULE_DEFAULT("rule_default", "默认抽奖"),
+        RULE_BLACKLIST("rule_blacklist", "黑名单抽奖"),
+        RULE_WEIGHT("rule_weight", "权重抽奖"),
+        ;
+        private final String code;
+        private final String info;
     }
 
 }

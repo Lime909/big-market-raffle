@@ -8,5 +8,5 @@ import org.qihua.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
  * @date 2024-06-10 11:53:34
  */
 public interface IDecisionTreeEngine {
-    DefaultTreeFactory.StrategyAwardData process(String userId, Long strategyId, Integer awardId);
+    DefaultTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Integer awardId);
 }
