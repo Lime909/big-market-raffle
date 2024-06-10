@@ -8,9 +8,9 @@ import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.AbstractRaffleStrategy;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
-import org.qihua.domain.strategy.service.rule.ILogicFilter;
+import org.qihua.domain.strategy.service.rule.filter.ILogicFilter;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import org.qihua.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import org.qihua.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

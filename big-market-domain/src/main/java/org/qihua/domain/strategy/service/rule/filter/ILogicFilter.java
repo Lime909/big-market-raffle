@@ -1,4 +1,4 @@
-package org.qihua.domain.strategy.service.rule;
+package org.qihua.domain.strategy.service.rule.filter;
 
 import org.qihua.domain.strategy.model.entity.RuleActionEntity;
 import org.qihua.domain.strategy.model.entity.RuleMatterEntity;

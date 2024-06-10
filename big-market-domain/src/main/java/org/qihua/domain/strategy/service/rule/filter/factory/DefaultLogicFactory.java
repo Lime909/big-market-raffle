@@ -1,11 +1,11 @@
-package org.qihua.domain.strategy.service.rule.factory;
+package org.qihua.domain.strategy.service.rule.filter.factory;
 
 import com.alibaba.fastjson2.util.AnnotationUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.qihua.domain.strategy.model.entity.RuleActionEntity;
 import org.qihua.domain.strategy.service.annotation.LogicStrategy;
-import org.qihua.domain.strategy.service.rule.ILogicFilter;
+import org.qihua.domain.strategy.service.rule.filter.ILogicFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

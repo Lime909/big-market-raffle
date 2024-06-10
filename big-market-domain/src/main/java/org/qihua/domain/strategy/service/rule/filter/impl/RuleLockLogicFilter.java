@@ -1,4 +1,4 @@
-package org.qihua.domain.strategy.service.rule.impl;
+package org.qihua.domain.strategy.service.rule.filter.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.strategy.model.entity.RuleActionEntity;
@@ -6,8 +6,8 @@ import org.qihua.domain.strategy.model.entity.RuleMatterEntity;
 import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.annotation.LogicStrategy;
-import org.qihua.domain.strategy.service.rule.ILogicFilter;
-import org.qihua.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import org.qihua.domain.strategy.service.rule.filter.ILogicFilter;
+import org.qihua.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

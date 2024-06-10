@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.qihua.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import org.qihua.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import org.qihua.types.common.Constants;
 
 import java.util.ArrayList;

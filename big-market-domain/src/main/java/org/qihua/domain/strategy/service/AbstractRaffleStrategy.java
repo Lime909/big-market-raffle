@@ -5,14 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 import org.qihua.domain.strategy.model.entity.RuleActionEntity;
-import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
 import org.qihua.domain.strategy.service.rule.chain.ILogicChain;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import org.qihua.domain.strategy.service.rule.factory.DefaultLogicFactory;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
 
