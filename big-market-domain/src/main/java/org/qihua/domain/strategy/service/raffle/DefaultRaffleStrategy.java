@@ -5,6 +5,7 @@ import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
 import org.qihua.domain.strategy.model.volobj.RuleTreeVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
+import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.AbstractRaffleStrategy;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
@@ -49,5 +50,15 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
         IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
         return treeEngine.process(userId, strategyId, awardId);
 
+    }
+
+    @Override
+    public StrategyAwardStockKeyVO takeQueueValue() throws InterruptedException {
+        return repository.takeQueueValue();
+    }
+
+    @Override
+    public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
+        repository.updateStrategyAwardStock(strategyId, awardId);
     }
 }

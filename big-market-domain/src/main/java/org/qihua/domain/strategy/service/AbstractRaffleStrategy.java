@@ -20,7 +20,7 @@ import org.qihua.types.exception.AppException;
  * @date 2024-06-05 15:18:45
  */
 @Slf4j
-public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
+public abstract class AbstractRaffleStrategy implements IRaffleStrategy, IRaffleStock{
     /** 策略仓储服务 */
     protected IStrategyRepository repository;
     /** 策略调度服务 */
