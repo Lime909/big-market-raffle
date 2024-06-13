@@ -1,13 +1,14 @@
 package org.qihua.domain.strategy.service.raffle;
 
 import lombok.extern.slf4j.Slf4j;
-import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
-import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
+import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.volobj.RuleTreeVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.AbstractRaffleStrategy;
+import org.qihua.domain.strategy.service.IRaffleAward;
+import org.qihua.domain.strategy.service.IRaffleStock;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
 import org.qihua.domain.strategy.service.rule.chain.ILogicChain;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
@@ -15,8 +16,7 @@ import org.qihua.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import org.qihua.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Lime
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
+public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRaffleAward, IRaffleStock {
 
     public DefaultRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch, DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory) {
         super(repository, strategyDispatch, defaultChainFactory, defaultTreeFactory);
@@ -60,5 +60,10 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     @Override
     public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
         repository.updateStrategyAwardStock(strategyId, awardId);
+    }
+
+    @Override
+    public List<StrategyAwardEntity> queryRaffleStrategyAwardList(Long strategyId) {
+        return repository.queryStrategyAwardList(strategyId);
     }
 }
