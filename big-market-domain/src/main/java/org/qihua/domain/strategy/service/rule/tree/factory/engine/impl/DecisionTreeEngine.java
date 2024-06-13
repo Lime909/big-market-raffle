@@ -28,7 +28,6 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         this.ruleTreeVO = ruleTreeVO;
     }
 
-
     @Override
     public DefaultTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Integer awardId) {
         DefaultTreeFactory.StrategyAwardVO strategyAwardData = null;
