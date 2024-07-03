@@ -1,18 +1,23 @@
-package org.qihua.infrastructure.persistent.po;
+package org.qihua.domain.activity.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.qihua.domain.activity.model.valobj.OrderStateVO;
 
 import java.util.Date;
 
 /**
  * @Author：Lime
- * @Description: 抽奖活动单
- * @Date：2024/6/29 14:28
+ * @Description: 活动参与对象实体
+ * @Date：2024/7/3 13:42
  */
 @Data
-public class RaffleActivityOrder {
-    /** 自增ID */
-    private Long id;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ActivityOrderEntity {
     /** 用户ID */
     private String userId;
     /** 活动ID */
@@ -32,9 +37,5 @@ public class RaffleActivityOrder {
     /** 月次数 */
     private Integer monthCount;
     /** 订单状态(not_used、used、expired) */
-    private String state;
-    /** 创建时间 */
-    private Date createTime;
-    /** 更新时间 */
-    private Date updateTime;
+    private OrderStateVO state;
 }

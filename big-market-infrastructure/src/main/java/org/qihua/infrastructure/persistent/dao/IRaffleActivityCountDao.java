@@ -1,6 +1,8 @@
 package org.qihua.infrastructure.persistent.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.qihua.infrastructure.persistent.po.RaffleActivity;
+import org.qihua.infrastructure.persistent.po.RaffleActivityCount;
 
 /**
  * @Author：Lime
@@ -9,4 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IRaffleActivityCountDao {
+
+    RaffleActivityCount queryRaffleActivityCountByActivityCountId(Long activityCountId);
 }

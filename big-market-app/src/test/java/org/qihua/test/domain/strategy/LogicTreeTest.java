@@ -1,4 +1,4 @@
-package org.qihua.test.domain;
+package org.qihua.test.domain.strategy;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package org.qihua.test.domain;
+package org.qihua.test.domain.strategy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
