@@ -1,5 +1,6 @@
 package org.qihua.domain.activity.repository;
 
+import org.qihua.domain.activity.model.aggregate.CreateOrderAggregate;
 import org.qihua.domain.activity.model.entity.ActivityCountEntity;
 import org.qihua.domain.activity.model.entity.ActivityEntity;
 import org.qihua.domain.activity.model.entity.ActivitySkuEntity;
@@ -16,4 +17,6 @@ public interface IActivityRepository {
     ActivityEntity queryRaffleActivityByActivityId(Long activityId);
 
     ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId);
+
+    void doSaveOrder(CreateOrderAggregate createOrderAggregate);
 }

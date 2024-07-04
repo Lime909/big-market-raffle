@@ -1,7 +1,6 @@
 package org.qihua.domain.activity.service;
 
-import org.qihua.domain.activity.model.entity.ActivityOrderEntity;
-import org.qihua.domain.activity.model.entity.ActivityShopCartEntity;
+import org.qihua.domain.activity.model.entity.SkuRechargeEntity;
 
 /**
  * @Author：Lime
@@ -10,11 +9,16 @@ import org.qihua.domain.activity.model.entity.ActivityShopCartEntity;
  */
 public interface IRaffleOrder {
 
+
     /**
-     * 以sku创建抽奖活动订单，获取参与资格
+     * 创建sku账户充值订单，给用户增加抽奖次数
      *
-     * @param activityShopCartEntity 活动通过sku领取活动
-     * @return 参与记录实体
+     * 1.在【打卡、签到、分享、对话、积分兑换】的行为下，创建出活动订单，给用户的活动账户【日、月】增加可用次数
+     * 2.对用户的抽奖次数，比如新进来就依次，前端页面上，用户点击可以获得一次抽奖机会
+     *
+     * @param skuRechargeEntity
+     * @return 活动ID
      */
-    ActivityOrderEntity createRaffleActivityOrder(ActivityShopCartEntity activityShopCartEntity);
+    String createSkuRechargeOrder(SkuRechargeEntity skuRechargeEntity);
+
 }

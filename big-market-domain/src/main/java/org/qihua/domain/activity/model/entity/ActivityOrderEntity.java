@@ -20,6 +20,8 @@ import java.util.Date;
 public class ActivityOrderEntity {
     /** 用户ID */
     private String userId;
+    /** sku */
+    private Long sku;
     /** 活动ID */
     private Long activityId;
     /** 活动名称 */
@@ -36,6 +38,8 @@ public class ActivityOrderEntity {
     private Integer dayCount;
     /** 月次数 */
     private Integer monthCount;
-    /** 订单状态(not_used、used、expired) */
+    /** 订单状态 */
     private OrderStateVO state;
+    /** 防重复的ID，确保幂等 */
+    private String outBusinessNo;
 }
