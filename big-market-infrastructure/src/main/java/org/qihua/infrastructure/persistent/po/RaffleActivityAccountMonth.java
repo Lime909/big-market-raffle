@@ -1,0 +1,29 @@
+package org.qihua.infrastructure.persistent.po;
+
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * @Author：Lime
+ * @Description: 抽奖活动账户表-月次数
+ * @Date：2024/7/11 22:57
+ */
+@Data
+public class RaffleActivityAccountMonth {
+
+    /** 自增ID */
+    private Long id;
+    /** 用户ID */
+    private String userId;
+    /** 日期（yyyy-mm） */
+    private String month;
+    /** 月次数 */
+    private Integer monthCount;
+    /** 月次数-剩余 */
+    private Integer monthCountSurplus;
+    /** 创建时间 */
+    private Date createTime;
+    /** 更新时间 */
+    private Date updateTime;
+}
