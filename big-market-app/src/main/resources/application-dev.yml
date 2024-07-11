@@ -12,6 +12,19 @@ app:
     api-version: v1
     cross-origin: '*'
 
+# spring配置rabbitmq
+spring:
+  rabbitmq:
+    addresses: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        prefetch: 1 # 每次投递n个信息，消费完再投递n个
+    topic:
+      activity_sku_stock_zero: activity_sku_stock_zero
+
 # 线程池配置
 thread:
   pool:
@@ -87,7 +100,7 @@ mybatis:
 redis:
   sdk:
     config:
-      host: localhost
+      host: 127.0.0.1
       port: 16379
       pool-size: 10
       min-idle-size: 5

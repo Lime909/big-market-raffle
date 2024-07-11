@@ -2,6 +2,8 @@ package org.qihua.infrastructure.persistent.redis;
 
 import org.redisson.api.*;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Lime
  * @description
@@ -262,5 +264,7 @@ public interface IRedisService {
     Long getAtomicLong(String key);
 
     Boolean setNx(String key);
+
+    Boolean setNx(String key, long expired, TimeUnit timeUnit);
 }
 
