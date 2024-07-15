@@ -2,7 +2,7 @@ package org.qihua.trigger.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.activity.model.valobj.ActivitySkuStockKeyVO;
-import org.qihua.domain.activity.service.ISkuStock;
+import org.qihua.domain.activity.service.IRaffleActivitySkuStockService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class UpdateActivitySkuStockJob {
 
     @Resource
-    private ISkuStock skuStock;
+    private IRaffleActivitySkuStockService skuStock;
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void exec() {

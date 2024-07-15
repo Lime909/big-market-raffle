@@ -1,6 +1,9 @@
 package org.qihua.infrastructure.persistent.po;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -10,12 +13,17 @@ import java.util.Date;
  * @Date：2024/7/11 22:57
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RaffleActivityAccountMonth {
 
     /** 自增ID */
     private Long id;
     /** 用户ID */
     private String userId;
+    /** 活动ID */
+    private Long activityId;
     /** 日期（yyyy-mm） */
     private String month;
     /** 月次数 */

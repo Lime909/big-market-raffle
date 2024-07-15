@@ -1,10 +1,10 @@
-package org.qihua.domain.activity.service;
+package org.qihua.domain.activity.service.quota;
 
 import org.qihua.domain.activity.model.entity.ActivityCountEntity;
 import org.qihua.domain.activity.model.entity.ActivityEntity;
 import org.qihua.domain.activity.model.entity.ActivitySkuEntity;
 import org.qihua.domain.activity.repository.IActivityRepository;
-import org.qihua.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import org.qihua.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 
 
 /**
@@ -12,12 +12,12 @@ import org.qihua.domain.activity.service.rule.factory.DefaultActivityChainFactor
  * @Description: 抽奖活动的支撑类
  * @Date：2024/7/3 17:45
  */
-public class RaffleActivitySupport {
+public class RaffleActivityAccountQuotaSupport {
 
     protected IActivityRepository activityRepository;
     protected DefaultActivityChainFactory defaultActivityChainFactory;
 
-    public RaffleActivitySupport(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public RaffleActivityAccountQuotaSupport(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         this.activityRepository = activityRepository;
         this.defaultActivityChainFactory = defaultActivityChainFactory;
     }

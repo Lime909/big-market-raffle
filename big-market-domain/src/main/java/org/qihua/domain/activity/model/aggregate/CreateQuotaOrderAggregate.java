@@ -9,14 +9,14 @@ import org.qihua.domain.activity.model.entity.ActivityOrderEntity;
 
 /**
  * @Author：Lime
- * @Description: 下单聚合对象
+ * @Description: 账户额度聚合对象
  * @Date：2024/7/3 13:57
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderAggregate {
+public class CreateQuotaOrderAggregate {
 
     /** 用户ID */
     private String userId;

@@ -1,4 +1,4 @@
-package org.qihua.domain.activity.service.rule;
+package org.qihua.domain.activity.service.quota.rule;
 
 import org.qihua.domain.activity.model.entity.ActivityCountEntity;
 import org.qihua.domain.activity.model.entity.ActivityEntity;

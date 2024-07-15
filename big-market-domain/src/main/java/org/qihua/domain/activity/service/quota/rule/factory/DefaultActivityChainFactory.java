@@ -1,8 +1,8 @@
-package org.qihua.domain.activity.service.rule.factory;
+package org.qihua.domain.activity.service.quota.rule.factory;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.qihua.domain.activity.service.rule.IActionChain;
+import org.qihua.domain.activity.service.quota.rule.IActionChain;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ public class DefaultActivityChainFactory {
 
     @Getter
     @AllArgsConstructor
-    public enum ActionModel{
+    public enum ActionModel {
         activity_base_action("activity_base_action","活动的时间、状态校验"),
         activity_sku_stock_action("activity_sku_stock_action","活动sku库存"),
         ;

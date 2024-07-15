@@ -7,7 +7,7 @@ import org.qihua.domain.activity.model.entity.SkuRechargeEntity;
  * @Description: 抽奖活动订单接口
  * @Date：2024/7/3 13:30
  */
-public interface IRaffleOrder {
+public interface IRaffleActivityAccountQuotaService {
 
 
     /**
@@ -19,6 +19,6 @@ public interface IRaffleOrder {
      * @param skuRechargeEntity
      * @return 活动ID
      */
-    String createSkuRechargeOrder(SkuRechargeEntity skuRechargeEntity);
+    String createOrder(SkuRechargeEntity skuRechargeEntity);
 
 }

@@ -4,10 +4,10 @@ import org.qihua.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
 /**
  * @Author：Lime
- * @Description: 活动库存接口
+ * @Description: 抽奖活动sku库存服务
  * @Date：2024/7/10 15:34
  */
-public interface ISkuStock {
+public interface IRaffleActivitySkuStockService {
 
     /**
      * 获取活动sku库存消耗队列

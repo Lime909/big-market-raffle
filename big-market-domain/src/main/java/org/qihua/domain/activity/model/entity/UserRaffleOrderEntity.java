@@ -1,25 +1,24 @@
-package org.qihua.infrastructure.persistent.po;
+package org.qihua.domain.activity.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.qihua.domain.activity.model.valobj.UserRaffleOrderStateVO;
 
 import java.util.Date;
 
 /**
  * @Author：Lime
- * @Description: 用户抽奖订单表
- * @Date：2024/7/11 22:46
+ * @Description: 用户抽奖订单实体对象
+ * @Date：2024/7/13 10:18
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRaffleOrder {
+public class UserRaffleOrderEntity {
 
-    /** 自增ID*/
-    private Long id;
     /** 用户ID */
     private String userId;
     /** 活动ID*/
@@ -33,9 +32,5 @@ public class UserRaffleOrder {
     /** 下单时间 */
     private Date orderTime;
     /** 订单状态 create-创建 used-已使用 cancel-已作废 */
-    private String orderState;
-    /** 创建时间 */
-    private Date createTime;
-    /** 更新时间 */
-    private Date updateTime;
+    private UserRaffleOrderStateVO orderState;
 }

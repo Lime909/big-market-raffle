@@ -1,8 +1,4 @@
-package org.qihua.domain.activity.service.rule;
-
-import org.qihua.domain.activity.model.entity.ActivityCountEntity;
-import org.qihua.domain.activity.model.entity.ActivityEntity;
-import org.qihua.domain.activity.model.entity.ActivitySkuEntity;
+package org.qihua.domain.activity.service.quota.rule;
 
 /**
  * @Author：Lime

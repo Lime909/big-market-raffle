@@ -1,11 +1,11 @@
-package org.qihua.domain.activity.service.rule.impl;
+package org.qihua.domain.activity.service.quota.rule.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.activity.model.entity.ActivityCountEntity;
 import org.qihua.domain.activity.model.entity.ActivityEntity;
 import org.qihua.domain.activity.model.entity.ActivitySkuEntity;
 import org.qihua.domain.activity.model.valobj.ActivityStateVO;
-import org.qihua.domain.activity.service.rule.AbstractActionChain;
+import org.qihua.domain.activity.service.quota.rule.AbstractActionChain;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
 import org.springframework.stereotype.Component;

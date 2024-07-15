@@ -3,7 +3,7 @@ package org.qihua.trigger.listener;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.qihua.domain.activity.service.ISkuStock;
+import org.qihua.domain.activity.service.IRaffleActivitySkuStockService;
 import org.qihua.types.event.BaseEvent;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -24,7 +24,7 @@ public class ActivitySkuStockZeroCustomer {
     @Value("${spring.rabbitmq.topic.activity_sku_stock_zero}")
     private String topic;
     @Resource
-    private ISkuStock skuStock;
+    private IRaffleActivitySkuStockService skuStock;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "activity_sku_stock_zero"))
     public void listener(String message){
