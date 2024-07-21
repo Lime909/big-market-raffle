@@ -16,6 +16,7 @@ import java.util.Map;
  * @date 2024-06-03 13:46:18
  */
 public interface IStrategyRepository {
+
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
     void storeStrategyAwardSearchRateTable(String key, int rateRange, Map<Integer, Integer> shuffleAwardSearchTable);
@@ -46,6 +47,7 @@ public interface IStrategyRepository {
 
     /**
      * 缓存奖品库存
+     *
      * @param cacheKey
      * @param awardCount
      */
@@ -53,6 +55,7 @@ public interface IStrategyRepository {
 
     /**
      * 缓存key，decr扣减库存
+     *
      * @param cacheKey
      * @return
      */
@@ -60,12 +63,14 @@ public interface IStrategyRepository {
 
     /**
      * 写入奖品库存消费队列
+     *
      * @param strategyAwardStockKeyVO
      */
     void awardStockConsumeSendQueue(StrategyAwardStockKeyVO strategyAwardStockKeyVO);
 
     /**
      * 获取奖品库存消费队列
+     *
      * @return
      * @throws InterruptedException
      */
@@ -73,6 +78,7 @@ public interface IStrategyRepository {
 
     /**
      * 更新奖品消耗库存
+     *
      * @param strategyId
      * @param awardId
      */
@@ -80,6 +86,7 @@ public interface IStrategyRepository {
 
     /**
      * 根据策略ID+奖品ID的唯一值组合，查询奖品信息
+     *
      * @param strategyId
      * @param awardId
      * @return StrategyAwardEntity

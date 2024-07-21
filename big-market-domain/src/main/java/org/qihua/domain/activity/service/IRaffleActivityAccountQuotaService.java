@@ -4,7 +4,7 @@ import org.qihua.domain.activity.model.entity.SkuRechargeEntity;
 
 /**
  * @Author：Lime
- * @Description: 抽奖活动订单接口
+ * @Description: 抽奖活动额度接口
  * @Date：2024/7/3 13:30
  */
 public interface IRaffleActivityAccountQuotaService {

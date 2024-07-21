@@ -24,7 +24,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch{
+public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatch {
 
     @Resource
     private IStrategyRepository repository;
@@ -37,7 +37,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
         List<StrategyAwardEntity> strategyAwardEntities = repository.queryStrategyAwardList(strategyId);
 
         // 2.缓存奖品列表【用于decr扣减库存使用】
-        for(StrategyAwardEntity strategyAwardEntity : strategyAwardEntities){
+        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
             Integer awardId = strategyAwardEntity.getAwardId();
             Integer awardCount = strategyAwardEntity.getAwardCountSurplus();
             cacheStrategyAwardCount(strategyId, awardId, awardCount);
@@ -49,16 +49,16 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
         // 3.2.权重策略配置 - rule_model权重规则
         StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
         String ruleWeight = strategyEntity.getRuleWeight();
-        if(ruleWeight == null) return true;
+        if (ruleWeight == null) return true;
 
         StrategyRuleEntity strategyRuleEntity = repository.queryStrategyRule(strategyId, ruleWeight);
         // 业务异常，rule_weight规则已适用但未配置
-        if(strategyRuleEntity == null){
-            throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(),ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
+        if (strategyRuleEntity == null) {
+            throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
         }
 
         Map<String, List<Integer>> ruleWeightValue = strategyRuleEntity.getRuleValues();
-        for(String key : ruleWeightValue.keySet()){
+        for (String key : ruleWeightValue.keySet()) {
             List<Integer> ruleValues = ruleWeightValue.get(key);
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
             strategyAwardEntitiesClone.removeIf(entity -> !ruleValues.contains(entity.getAwardId()));
@@ -104,6 +104,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
 
     /**
      * 缓存奖品库存到Redis
+     *
      * @param strategyId
      * @param awardId
      * @param awardCount
@@ -129,7 +130,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory,IStrategyDispatch
     }
 
     @Override
-    public Integer getRandomAwardId(String key){
+    public Integer getRandomAwardId(String key) {
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rateRange = repository.getRateRange(key);
         // 通过生成的随机值，获取概率值奖品查找表的结果

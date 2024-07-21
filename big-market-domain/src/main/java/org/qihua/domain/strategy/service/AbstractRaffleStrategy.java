@@ -22,17 +22,25 @@ import org.qihua.types.exception.AppException;
  */
 @Slf4j
 public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
-    /** 策略仓储服务 */
+    /**
+     * 策略仓储服务
+     */
     protected IStrategyRepository repository;
-    /** 策略调度服务 */
+    /**
+     * 策略调度服务
+     */
     protected IStrategyDispatch strategyDispatch;
-    /** 抽奖的责任链 */
+    /**
+     * 抽奖的责任链
+     */
     protected final DefaultChainFactory defaultChainFactory;
-    /** 抽奖的决策树 */
+    /**
+     * 抽奖的决策树
+     */
     protected final DefaultTreeFactory defaultTreeFactory;
 
     public AbstractRaffleStrategy(IStrategyRepository repository, IStrategyDispatch dispatch
-    , DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory) {
+            , DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory) {
         this.repository = repository;
         this.strategyDispatch = dispatch;
         this.defaultChainFactory = defaultChainFactory;
@@ -45,14 +53,14 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         /** 1.参数校验 */
         String userId = raffleFactorEntity.getUserId();
         Long strategyId = raffleFactorEntity.getStrategyId();
-        if(strategyId == null || StringUtils.isBlank(userId)){
+        if (strategyId == null || StringUtils.isBlank(userId)) {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
 
         /** 2.责任链抽奖计算 */
         DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = raffleLogicChain(userId, strategyId);
         log.info("抽奖策略计算-责任链 {} {} {} {}", userId, strategyId, chainStrategyAwardVO.getAwardId(), chainStrategyAwardVO.getLogicModel());
-        if(!chainStrategyAwardVO.getLogicModel().equals(DefaultChainFactory.LogicModel.RULE_DEFAULT.getCode())){
+        if (!chainStrategyAwardVO.getLogicModel().equals(DefaultChainFactory.LogicModel.RULE_DEFAULT.getCode())) {
             return buildRaffleAwardEntity(strategyId, chainStrategyAwardVO.getAwardId(), null);
         }
 
@@ -66,7 +74,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
     }
 
     private RaffleAwardEntity buildRaffleAwardEntity(Long strategyId, Integer awardId, String awardConfig) {
-        StrategyAwardEntity strategyAward = repository.queryStrategyAwardEntity(strategyId,awardId);
+        StrategyAwardEntity strategyAward = repository.queryStrategyAwardEntity(strategyId, awardId);
         return RaffleAwardEntity.builder()
                 .awardId(awardId)
                 .awardConfig(awardConfig)

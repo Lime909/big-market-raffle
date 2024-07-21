@@ -22,14 +22,14 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
         log.info("规则过滤-次数锁 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
 
         Long raffleCount = 0L;
-        try{
+        try {
             raffleCount = Long.parseLong(ruleValue);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("规则过滤-次数锁异常 ruleValue: " + ruleValue + " 配置不正确");
         }
 
         /** 用户抽奖次数大于规则限定值，规则放行 */
-        if(userRaffleCount > raffleCount){
+        if (userRaffleCount > raffleCount) {
             return DefaultTreeFactory.TreeActionEntity.builder()
                     .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.ALLOW)
                     .build();

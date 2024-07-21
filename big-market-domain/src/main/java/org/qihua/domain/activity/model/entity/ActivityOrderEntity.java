@@ -18,6 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityOrderEntity {
+
     /** 用户ID */
     private String userId;
     /** sku */
@@ -42,4 +43,5 @@ public class ActivityOrderEntity {
     private OrderStateVO state;
     /** 防重复的ID，确保幂等 */
     private String outBusinessNo;
+
 }

@@ -18,6 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityEntity {
+
     /** 活动ID */
     private Long activityId;
     /** 活动名称 */
@@ -34,4 +35,5 @@ public class ActivityEntity {
     private Long strategyId;
     /** 活动状态 */
     private ActivityStateVO state;
+
 }

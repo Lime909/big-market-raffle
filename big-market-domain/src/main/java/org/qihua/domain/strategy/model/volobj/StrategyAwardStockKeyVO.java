@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyAwardStockKeyVO {
+
     /** 策略ID */
     private Long strategyId;
     /** 奖品ID */
     private Integer awardId;
+
 }

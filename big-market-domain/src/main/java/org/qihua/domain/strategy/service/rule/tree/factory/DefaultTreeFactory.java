@@ -26,7 +26,7 @@ public class DefaultTreeFactory {
         this.logicTreeNodeMap = logicTreeNodeMap;
     }
 
-    public IDecisionTreeEngine openLogicTree(RuleTreeVO ruleTreeVO){
+    public IDecisionTreeEngine openLogicTree(RuleTreeVO ruleTreeVO) {
         return new DecisionTreeEngine(logicTreeNodeMap, ruleTreeVO);
     }
 
@@ -44,9 +44,13 @@ public class DefaultTreeFactory {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class StrategyAwardVO {
-        /** 抽奖奖品ID - 内部流转使用 */
+        /**
+         * 抽奖奖品ID - 内部流转使用
+         */
         private Integer awardId;
-        /** 抽奖奖品规则 */
+        /**
+         * 抽奖奖品规则
+         */
         private String awardRuleValue;
 
     }

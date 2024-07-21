@@ -11,6 +11,7 @@ public interface IRaffleActivitySkuStockService {
 
     /**
      * 获取活动sku库存消耗队列
+     *
      * @return 奖品库存key信息
      * @throws InterruptedException
      */
@@ -23,13 +24,16 @@ public interface IRaffleActivitySkuStockService {
 
     /**
      * 延迟队列+任务趋势更新活动sku库存
+     *
      * @param sku
      */
     void updateActivitySkuStock(Long sku);
 
     /**
      * 延迟库存以消耗完毕，清空数据库库存
+     *
      * @param sku
      */
     void clearActivitySkuStock(Long sku);
+
 }

@@ -26,7 +26,7 @@ import static org.qihua.types.enums.ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY;
 
 /**
  * @author Lime
- * @description 策略服务仓储实现
+ * @description 策略仓储服务实现
  * @date 2024-06-03 13:30:15
  */
 @Slf4j

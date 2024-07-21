@@ -29,8 +29,8 @@ public class DefaultActivityChainFactory {
     @Getter
     @AllArgsConstructor
     public enum ActionModel {
-        activity_base_action("activity_base_action","活动的时间、状态校验"),
-        activity_sku_stock_action("activity_sku_stock_action","活动sku库存"),
+        activity_base_action("activity_base_action", "活动的时间、状态校验"),
+        activity_sku_stock_action("activity_sku_stock_action", "活动sku库存"),
         ;
 
         private final String code;

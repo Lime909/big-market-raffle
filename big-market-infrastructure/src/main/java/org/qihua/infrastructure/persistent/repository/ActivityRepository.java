@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @Author：Lime
- * @Description: 活动仓储服务
+ * @Description: 活动仓储服务实现
  * @Date：2024/7/3 15:43
  */
 @Slf4j
@@ -248,7 +248,7 @@ public class ActivityRepository implements IActivityRepository {
         userRaffleOrderReq.setUserId(partakeRaffleActivityEntity.getUserId());
         userRaffleOrderReq.setActivityId(partakeRaffleActivityEntity.getActivityId());
         UserRaffleOrder userRaffleOrderRes = userRaffleOrderDao.queryNoUsedRaffleOrder(userRaffleOrderReq);
-        if(userRaffleOrderRes == null) return null;
+        if (userRaffleOrderRes == null) return null;
         /** 封装结果 */
         UserRaffleOrderEntity userRaffleOrderEntity = new UserRaffleOrderEntity();
         userRaffleOrderEntity.setUserId(userRaffleOrderRes.getUserId());
@@ -290,7 +290,7 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityAccountMonthReq.setActivityId(activityId);
         raffleActivityAccountMonthReq.setMonth(month);
         RaffleActivityAccountMonth raffleActivityAccountMonthRes = raffleActivityAccountMonthDao.queryActivityAccountMonthByUserId(raffleActivityAccountMonthReq);
-        if(raffleActivityAccountMonthRes == null) return null;
+        if (raffleActivityAccountMonthRes == null) return null;
         /** 封装结果 */
         return ActivityAccountMonthEntity.builder()
                 .userId(raffleActivityAccountMonthRes.getUserId())
@@ -309,7 +309,7 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityAccountDayReq.setActivityId(activityId);
         raffleActivityAccountDayReq.setDay(day);
         RaffleActivityAccountDay raffleActivityAccountDayRes = raffleActivityAccountDayDao.queryActivityAccountDayByUserId(raffleActivityAccountDayReq);
-        if(raffleActivityAccountDayRes == null) return null;
+        if (raffleActivityAccountDayRes == null) return null;
         /** 封装结果 */
         return ActivityAccountDayEntity.builder()
                 .userId(raffleActivityAccountDayReq.getUserId())

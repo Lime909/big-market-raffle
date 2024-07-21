@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityAccountEntity {
+
     /** 用户ID */
     private String userId;
     /** 活动ID */
@@ -31,4 +32,5 @@ public class ActivityAccountEntity {
     private Integer monthCount;
     /** 月剩余次数 */
     private Integer monthCountSurplus;
+
 }

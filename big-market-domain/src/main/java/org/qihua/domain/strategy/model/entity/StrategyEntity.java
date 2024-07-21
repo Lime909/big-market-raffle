@@ -17,6 +17,7 @@ import org.qihua.types.common.Constants;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyEntity {
+
     /** 抽奖策略ID */
     private Long strategyId;
     /** 抽奖策略描述 */

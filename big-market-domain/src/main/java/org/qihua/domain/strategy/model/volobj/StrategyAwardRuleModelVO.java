@@ -15,5 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyAwardRuleModelVO {
+
     private String ruleModels;
+
 }

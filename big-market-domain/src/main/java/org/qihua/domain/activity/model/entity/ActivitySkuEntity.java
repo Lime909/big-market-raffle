@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivitySkuEntity {
+
     /** 商品sku */
     private Long sku;
     /** 活动ID */
@@ -25,4 +26,5 @@ public class ActivitySkuEntity {
     private Integer stockCount;
     /** 剩余库存 */
     private Integer stockCountSurplus;
+
 }

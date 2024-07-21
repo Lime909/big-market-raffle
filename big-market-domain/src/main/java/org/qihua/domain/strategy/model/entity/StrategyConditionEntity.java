@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyConditionEntity {
+
     /** 用户ID */
     private String userId;
     /** 策略ID */
     private Integer strategyId;
+
 }

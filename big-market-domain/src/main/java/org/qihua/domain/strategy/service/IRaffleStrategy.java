@@ -11,4 +11,5 @@ import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 public interface IRaffleStrategy {
 
     RaffleAwardEntity performRaffle(RaffleFactorEntity raffleFactorEntity);
+
 }

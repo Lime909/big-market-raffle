@@ -30,8 +30,8 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
         String userId = skuRechargeEntity.getUserId();
         Long sku = skuRechargeEntity.getSku();
         String outBusinessNo = skuRechargeEntity.getOutBusinessNo();
-        if(StringUtils.isBlank(userId) || sku == null || StringUtils.isBlank(outBusinessNo)){
-            throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
+        if (StringUtils.isBlank(userId) || sku == null || StringUtils.isBlank(outBusinessNo)) {
+            throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
 
         /** 2.查询基础信息 */
@@ -58,5 +58,5 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
 
     protected abstract void doSaveOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
 
-    protected abstract CreateQuotaOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity) ;
+    protected abstract CreateQuotaOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity);
 }

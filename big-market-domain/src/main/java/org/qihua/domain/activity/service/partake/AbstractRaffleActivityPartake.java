@@ -39,17 +39,17 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         ActivityEntity activityEntity = activityRepository.queryRaffleActivityByActivityId(activityId);
 
         /** 校验活动状态 */
-        if(!activityEntity.getState().equals(ActivityStateVO.open)){
+        if (!activityEntity.getState().equals(ActivityStateVO.open)) {
             throw new AppException(ResponseCode.ACTIVITY_STATE_ERROR.getCode(), ResponseCode.ACTIVITY_STATE_ERROR.getInfo());
         }
         /** 校验活动日期 */
-        if(activityEntity.getBeginDateTime().after(currentDate) || activityEntity.getEndDateTime().before(currentDate)){
+        if (activityEntity.getBeginDateTime().after(currentDate) || activityEntity.getEndDateTime().before(currentDate)) {
             throw new AppException(ResponseCode.ACTIVITY_DATE_ERROR.getCode(), ResponseCode.ACTIVITY_DATE_ERROR.getInfo());
         }
 
         /** 2.查询未被使用的订单参与记录 */
         UserRaffleOrderEntity userRaffleOrderEntity = activityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
-        if(userRaffleOrderEntity != null){
+        if (userRaffleOrderEntity != null) {
             log.info("创建参与活动订单[已存在未消费] userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
             return userRaffleOrderEntity;
         }
@@ -60,7 +60,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         /** 4.构建订单 */
         UserRaffleOrderEntity userRaffleOrder = this.buildUserRaffleOrder(userId, activityId, currentDate);
 
-        /** 5.填充抽奖但实体对象 */
+        /** 5.填充抽奖的实体对象 */
         createPartakeOrderAggregate.setUserRaffleOrderEntity(userRaffleOrder);
 
         /** 6.保存聚合对象 */

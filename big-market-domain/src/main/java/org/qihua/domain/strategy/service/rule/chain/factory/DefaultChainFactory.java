@@ -28,7 +28,7 @@ public class DefaultChainFactory {
         StrategyEntity strategy = repository.queryStrategyEntityByStrategyId(strategyId);
         String[] ruleModels = strategy.ruleModels();
 
-        if(ruleModels == null || ruleModels.length == 0) {
+        if (ruleModels == null || ruleModels.length == 0) {
             return logicChainMap.get(LogicModel.RULE_DEFAULT.getCode());
         }
 

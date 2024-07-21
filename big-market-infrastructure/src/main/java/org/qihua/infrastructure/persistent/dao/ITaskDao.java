@@ -1,6 +1,10 @@
 package org.qihua.infrastructure.persistent.dao;
 
+import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import org.apache.ibatis.annotations.Mapper;
+import org.qihua.infrastructure.persistent.po.Task;
+
+import java.util.List;
 
 /**
  * @Author：Lime
@@ -9,4 +13,14 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ITaskDao {
+
+    void insert(Task task);
+
+    @DBRouter
+    void updateTaskSendMessageCompleted(Task task);
+
+    @DBRouter
+    void updateTaskSendMessageFail(Task task);
+
+    List<Task> queryNoSendMessageTaskList();
 }

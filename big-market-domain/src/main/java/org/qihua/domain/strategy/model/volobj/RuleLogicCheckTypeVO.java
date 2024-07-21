@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RuleLogicCheckTypeVO {
+
     ALLOW("0000","放行；执行后续的留存流程，不受规则影响"),
     TAKE_OVER("0001","接管；后续的流程，受到规则的影响"),
     ;

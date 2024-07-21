@@ -22,4 +22,5 @@ public interface IRaffleStock {
      * @param awardId
      */
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
+
 }

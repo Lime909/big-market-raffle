@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Slf4j
 @Service
-public class ActivityArmory implements IActivityArmory, IActivityDispatch{
+public class ActivityArmory implements IActivityArmory, IActivityDispatch {
 
     @Resource
     private IActivityRepository activityRepository;

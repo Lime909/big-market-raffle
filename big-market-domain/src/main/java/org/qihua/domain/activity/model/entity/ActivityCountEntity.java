@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityCountEntity {
+
     /** 活动次数编号 */
     private Long activityCountId;
     /** 总次数 */
@@ -23,4 +24,5 @@ public class ActivityCountEntity {
     private Integer dayCount;
     /** 月次数 */
     private Integer monthCount;
+
 }

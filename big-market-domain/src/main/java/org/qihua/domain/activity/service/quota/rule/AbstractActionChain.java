@@ -5,7 +5,7 @@ package org.qihua.domain.activity.service.quota.rule;
  * @Description: 抽奖动作动作责任链抽象类
  * @Date：2024/7/3 18:06
  */
-public abstract class AbstractActionChain implements IActionChain{
+public abstract class AbstractActionChain implements IActionChain {
 
     private IActionChain next;
 

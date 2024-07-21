@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RuleLimitTypeVO {
+
     EQUAL(1, "等于"),
     GT(2, "大于"),
     LT(3, "小于"),

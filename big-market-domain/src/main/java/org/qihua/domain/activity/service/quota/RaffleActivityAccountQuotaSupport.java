@@ -30,7 +30,7 @@ public class RaffleActivityAccountQuotaSupport {
         return activityRepository.queryRaffleActivityByActivityId(activityId);
     }
 
-    public ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId){
+    public ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId) {
         return activityRepository.queryRaffleActivityCountByActivityCountId(activityCountId);
     }
 }
