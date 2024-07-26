@@ -9,10 +9,13 @@ import org.qihua.domain.award.model.entity.TaskEntity;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 import org.qihua.domain.award.repository.IAwardRepository;
 import org.qihua.infrastructure.event.EventPublisher;
+import org.qihua.infrastructure.persistent.dao.IRaffleActivityOrderDao;
 import org.qihua.infrastructure.persistent.dao.ITaskDao;
 import org.qihua.infrastructure.persistent.dao.IUserAwardRecordDao;
+import org.qihua.infrastructure.persistent.dao.IUserRaffleOrderDao;
 import org.qihua.infrastructure.persistent.po.Task;
 import org.qihua.infrastructure.persistent.po.UserAwardRecord;
+import org.qihua.infrastructure.persistent.po.UserRaffleOrder;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
 import org.springframework.dao.DuplicateKeyException;
@@ -32,6 +35,8 @@ public class AwardRepository implements IAwardRepository {
 
     @Resource
     private ITaskDao taskDao;
+    @Resource
+    private IUserRaffleOrderDao userRaffleOrderDao;
     @Resource
     private IUserAwardRecordDao userAwardRecordDao;
     @Resource
@@ -66,6 +71,10 @@ public class AwardRepository implements IAwardRepository {
         task.setMessage(JSON.toJSONString(taskEntity.getMessage()));
         task.setState(taskEntity.getState().getCode());
 
+        UserRaffleOrder userRaffleOrderReq = new UserRaffleOrder();
+        userRaffleOrderReq.setUserId(userId);
+        userRaffleOrderReq.setActivityId(activityId);
+
         try {
             dbRouter.doRouter(userId);
             transactionTemplate.execute(status -> {
@@ -74,6 +83,13 @@ public class AwardRepository implements IAwardRepository {
                     userAwardRecordDao.insert(userAwardRecord);
                     /** 写入任务 */
                     taskDao.insert(task);
+                    /** 更新抽奖单 */
+                    int count = userRaffleOrderDao.updateUserRaffleOrderStateUsed(userRaffleOrderReq);
+                    if(count != 1){
+                        status.setRollbackOnly();
+                        log.error("写入中奖记录，用户抽奖单已使用过，不可重复抽奖 userId:{} activityId:{} awardId:{}", userId, activityId, awardId);
+                        throw new AppException(ResponseCode.ACTIVITY_ORDER_ERROR.getCode(), ResponseCode.ACTIVITY_ORDER_ERROR.getInfo());
+                    }
                     return 1;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
@@ -85,12 +101,12 @@ public class AwardRepository implements IAwardRepository {
             dbRouter.clear();
         }
 
-        try{
+        try {
             /** 发送信息【在事务外执行，失败了也能有任务补偿】*/
             eventPublisher.publish(taskEntity.getTopic(), task.getMessage());
             /** 更新数据库记录，task任务表 */
             taskDao.updateTaskSendMessageCompleted(task);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("写入中奖记录，发送MQ消息失败 userId:{} topic:{}", userId, taskEntity.getTopic());
             taskDao.updateTaskSendMessageFail(task);
         }

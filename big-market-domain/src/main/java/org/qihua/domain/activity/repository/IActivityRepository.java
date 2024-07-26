@@ -6,6 +6,7 @@ import org.qihua.domain.activity.model.entity.*;
 import org.qihua.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author：Lime
@@ -46,4 +47,5 @@ public interface IActivityRepository {
 
     void saveCreatePartakeOrderAggregate(CreatePartakeOrderAggregate createPartakeOrderAggregate);
 
+    List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId);
 }

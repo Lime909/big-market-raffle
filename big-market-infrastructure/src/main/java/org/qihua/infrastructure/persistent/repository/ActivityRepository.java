@@ -24,7 +24,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -362,6 +365,13 @@ public class ActivityRepository implements IActivityRepository {
                             log.warn("写入创建参与活动记录，更新月账户额度不足，异常 userId:{} activityId:{} month:{} ", userId, activityId, activityAccountMonthEntity.getMonth());
                             throw new AppException(ResponseCode.ACTIVITY_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACTIVITY_MONTH_QUOTA_ERROR.getInfo());
                         }
+                        /** 更新总账户的月镜像库存 */
+                        raffleActivityAccountDao.updateActivityAccountMonthSubtractionQuota(
+                                RaffleActivityAccount.builder()
+                                        .userId(userId)
+                                        .activityId(activityId)
+                                        .build()
+                        );
                     } else {
                         raffleActivityAccountMonthDao.insertActivityAccountMonth(RaffleActivityAccountMonth.builder()
                                 .userId(activityAccountMonthEntity.getUserId())
@@ -394,6 +404,13 @@ public class ActivityRepository implements IActivityRepository {
                             status.setRollbackOnly();
                             log.warn("写入创建参与活动记录，更新日额度不足，异常 userId:{} activityId:{} day:{}", userId, activityId, activityAccountDayEntity.getDay());
                         }
+                        /** 更新总账户的日镜像库存 */
+                        raffleActivityAccountDao.updateActivityAccountDaySubtractionQuota(
+                                RaffleActivityAccount.builder()
+                                        .userId(userId)
+                                        .activityId(activityId)
+                                        .build()
+                        );
                     } else {
                         raffleActivityAccountDayDao.insertActivityAccountDay(RaffleActivityAccountDay.builder()
                                 .userId(activityAccountDayEntity.getUserId())
@@ -432,6 +449,22 @@ public class ActivityRepository implements IActivityRepository {
         } finally {
             dbRouter.clear();
         }
+    }
+
+    @Override
+    public List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId) {
+        List<RaffleActivitySku> raffleActivitySkus = raffleActivitySkuDao.queryActivitySkuListByActivityId(activityId);
+        List<ActivitySkuEntity> activitySkuEntities = new ArrayList<>(raffleActivitySkus.size());
+        for (RaffleActivitySku raffleActivitySku : raffleActivitySkus) {
+            ActivitySkuEntity activitySkuEntity = new ActivitySkuEntity();
+            activitySkuEntity.setSku(raffleActivitySku.getSku());
+            activitySkuEntity.setActivityId(raffleActivitySku.getActivityId());
+            activitySkuEntity.setActivityCountId(raffleActivitySku.getActivityCountId());
+            activitySkuEntity.setStockCount(raffleActivitySku.getStockCount());
+            activitySkuEntity.setStockCountSurplus(raffleActivitySku.getStockCountSurplus());
+            activitySkuEntities.add(activitySkuEntity);
+        }
+        return activitySkuEntities;
     }
 
 }

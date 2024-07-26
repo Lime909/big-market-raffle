@@ -40,9 +40,9 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
         log.info("抽奖责任链-权重开始 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
 
+        /** 1.根据用户ID查询用户抽奖消耗的积分值，从数据库中查询。 */
         String ruleValue = repository.queryStrategyRuleValue(strategyId, ruleModel());
 
-        /** 1.根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。 */
         Map<Long, String> analyticalValueGroup = getAnalyticalValue(ruleValue);
         if (analyticalValueGroup == null || analyticalValueGroup.isEmpty()) {
             return null;

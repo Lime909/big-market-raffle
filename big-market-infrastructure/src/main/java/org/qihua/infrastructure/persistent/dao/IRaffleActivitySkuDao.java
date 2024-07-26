@@ -3,6 +3,8 @@ package org.qihua.infrastructure.persistent.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.qihua.infrastructure.persistent.po.RaffleActivitySku;
 
+import java.util.List;
+
 /**
  * @Author：Lime
  * @Description: 商品skuDao
@@ -16,4 +18,6 @@ public interface IRaffleActivitySkuDao {
     void updateActivitySkuStock(Long sku);
 
     void clearActivitySkuStock(Long sku);
+
+    List<RaffleActivitySku> queryActivitySkuListByActivityId(Long activityId);
 }
