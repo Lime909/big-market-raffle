@@ -12,9 +12,9 @@ import org.qihua.infrastructure.persistent.po.RaffleActivityAccount;
 @Mapper
 public interface IRaffleActivityAccountDao {
 
-    int updateAccountQuota(RaffleActivityAccount raffleActivityAccount);
-
     void insert(RaffleActivityAccount raffleActivityAccount);
+
+    int updateAccountQuota(RaffleActivityAccount raffleActivityAccount);
 
     @DBRouter
     RaffleActivityAccount queryActivityAccountByUserId(RaffleActivityAccount raffleActivityAccountReq);

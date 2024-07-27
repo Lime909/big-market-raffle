@@ -72,8 +72,8 @@ public class AwardRepository implements IAwardRepository {
         task.setState(taskEntity.getState().getCode());
 
         UserRaffleOrder userRaffleOrderReq = new UserRaffleOrder();
-        userRaffleOrderReq.setUserId(userId);
-        userRaffleOrderReq.setActivityId(activityId);
+        userRaffleOrderReq.setUserId(userAwardRecordEntity.getUserId());
+        userRaffleOrderReq.setOrderId(userAwardRecordEntity.getOrderId());
 
         try {
             dbRouter.doRouter(userId);

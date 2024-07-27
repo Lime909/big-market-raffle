@@ -8,6 +8,7 @@ import org.qihua.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author Lime
@@ -22,10 +23,10 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
     private IStrategyRepository repository;
 
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue, Date endTime) {
         log.info("规则过滤-次数锁 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
 
-        Long raffleCount = 0L;
+        long raffleCount = 0L;
         try {
             raffleCount = Long.parseLong(ruleValue);
         } catch (Exception e) {
@@ -38,14 +39,14 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
         if (userRaffleCount > raffleCount) {
             log.info("规则过滤-次数锁 【放行】 userId:{} strategyId:{} raffleCount:{} userRaffleCount:{}", userId, strategyId, raffleCount, userRaffleCount);
             return DefaultTreeFactory.TreeActionEntity.builder()
-                    .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.ALLOW)
+                    .ruleLogicCheckType(RuleLogicCheckTypeVO.ALLOW)
                     .build();
         }
 
         /** 用户抽奖次数小于规则限定值，规则放行 */
         log.info("规则过滤-次数锁 【拦截】 userId:{} strategyId:{} raffleCount:{} userRaffleCount:{}", userId, strategyId, raffleCount, userRaffleCount);
         return DefaultTreeFactory.TreeActionEntity.builder()
-                .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.TAKE_OVER)
+                .ruleLogicCheckType(RuleLogicCheckTypeVO.TAKE_OVER)
                 .build();
     }
 }

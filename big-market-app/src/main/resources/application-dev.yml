@@ -9,10 +9,12 @@ server:
 # 应用配置
 app:
   config:
+    # 版本，方便通过接口版本升级
     api-version: v1
+    # 跨域，开发阶段可以设置为 * 不限制
     cross-origin: '*'
 
-# spring配置rabbitmq
+# Spring 配置；rabbitmq
 spring:
   rabbitmq:
     addresses: 127.0.0.1
@@ -37,6 +39,9 @@ thread:
         block-queue-size: 5000
         policy: CallerRunsPolicy
 
+# 多数据源路由配置，库数量 * 表数量 为2的次幂，如2库4表
+# mysql 5.x 配置 driver-class-name: com.mysql.jdbc.Driver    mysql-connector-java 5.1.34
+# mysql 8.x 配置 driver-class-name: com.mysql.cj.jdbc.Driver mysql-connector-java 8.0.22
 mini-db-router:
   jdbc:
     datasource:

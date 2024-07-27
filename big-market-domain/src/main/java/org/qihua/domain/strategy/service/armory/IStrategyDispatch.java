@@ -1,5 +1,7 @@
 package org.qihua.domain.strategy.service.armory;
 
+import java.util.Date;
+
 /**
  * @author Lime
  * @description
@@ -34,8 +36,9 @@ public interface IStrategyDispatch {
      * 策略ID和奖品ID，扣减奖品缓存库存
      * @param strategyId
      * @param awardId
+     * @param endTime
      * @return
      */
-    Boolean subtractionAwardStock(Long strategyId, Integer awardId);
+    Boolean subtractionAwardStock(Long strategyId, Integer awardId, Date endTime);
 
 }

@@ -9,5 +9,6 @@ public interface ILogicChainArmory {
 
     ILogicChain next();
 
-    ILogicChain appendNext(ILogicChain chain);
+    ILogicChain appendNext(ILogicChain next);
+
 }

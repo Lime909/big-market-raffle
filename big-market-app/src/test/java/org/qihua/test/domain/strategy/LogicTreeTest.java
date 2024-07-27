@@ -95,9 +95,9 @@ public class LogicTreeTest {
             put("rule_luck_award", rule_luck_award);
         }});
 
-        IDecisionTreeEngine treeComposite = defaultTreeFactory.openLogicTree(ruleTreeVO);
+        IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
 
-        DefaultTreeFactory.StrategyAwardVO data = treeComposite.process("Lime", 100001L, 100);
+        DefaultTreeFactory.StrategyAwardVO data = treeEngine.process("Lime", 100001L, 100, null);
         log.info("测试结果：{}", JSON.toJSONString(data));
 
     }

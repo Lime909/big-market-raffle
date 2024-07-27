@@ -31,16 +31,17 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
     protected CreatePartakeOrderAggregate doFilterAccount(String userId, Long activityId, Date currentDate) {
         /** 查询总账户额度 */
         ActivityAccountEntity activityAccountEntity = activityRepository.queryActivityAccountByUserId(userId, activityId);
-        /** 额度判断*/
+
+        /** 额度判断，只判断总剩余额度*/
         if (activityAccountEntity == null || activityAccountEntity.getTotalCountSurplus() <= 0) {
-            throw new AppException(ResponseCode.ACTIVITY_QUOTA_ERROR.getCode(), ResponseCode.ACTIVITY_QUOTA_ERROR.getInfo());
+            throw new AppException(ResponseCode.ACCOUNT_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_QUOTA_ERROR.getInfo());
         }
 
         String month = dateFormatMonth.format(currentDate);
         /** 查询月账户额度 */
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonthByUserId(userId, activityId, month);
         if (activityAccountMonthEntity != null && activityAccountMonthEntity.getMonthCountSurplus() <= 0) {
-            throw new AppException(ResponseCode.ACTIVITY_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACTIVITY_MONTH_QUOTA_ERROR.getInfo());
+            throw new AppException(ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getInfo());
         }
 
         /** 创建月账户额度 true-存在 false-不存在 */
@@ -58,7 +59,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
         /** 查询日账户额度 */
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDayByUserId(userId, activityId, day);
         if (activityAccountDayEntity != null && activityAccountDayEntity.getDayCountSurplus() <= 0) {
-            throw new AppException(ResponseCode.ACTIVITY_DAY_QUOTA_ERROR.getCode(), ResponseCode.ACTIVITY_DAY_QUOTA_ERROR.getInfo());
+            throw new AppException(ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getInfo());
         }
 
         /** 创建日账户额度 true-存在 false-不存在 */
@@ -95,9 +96,9 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
         userRaffleOrderEntity.setActivityName(activityEntity.getActivityName());
         userRaffleOrderEntity.setStrategyId(activityEntity.getStrategyId());
         userRaffleOrderEntity.setOrderId(RandomStringUtils.randomNumeric(12));
-        userRaffleOrderEntity.setOrderState(UserRaffleOrderStateVO.create);
         userRaffleOrderEntity.setOrderTime(currentDate);
-
+        userRaffleOrderEntity.setOrderState(UserRaffleOrderStateVO.create);
+        userRaffleOrderEntity.setEndTime(activityEntity.getEndDateTime());
         return userRaffleOrderEntity;
     }
 }

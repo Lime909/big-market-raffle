@@ -30,12 +30,6 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
      */
     public Long userScore = 0L;
 
-
-    @Override
-    protected String ruleModel() {
-        return DefaultChainFactory.LogicModel.RULE_WEIGHT.getCode();
-    }
-
     @Override
     public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
         log.info("抽奖责任链-权重开始 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
@@ -45,7 +39,8 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
 
         Map<Long, String> analyticalValueGroup = getAnalyticalValue(ruleValue);
         if (analyticalValueGroup == null || analyticalValueGroup.isEmpty()) {
-            return null;
+            log.warn("抽奖责任链-权重告警【策略配置权重，但ruleValue未配置相应值】 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
+            return next().logic(userId, strategyId);
         }
 
         /** 2.转换keys，默认排序 */
@@ -72,6 +67,11 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         /** 5. 过滤其他责任链 */
         log.info("抽奖责任链-权重放行 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
         return next().logic(userId, strategyId);
+    }
+
+    @Override
+    protected String ruleModel() {
+        return DefaultChainFactory.LogicModel.RULE_WEIGHT.getCode();
     }
 
     private Map<Long, String> getAnalyticalValue(String ruleValue) {

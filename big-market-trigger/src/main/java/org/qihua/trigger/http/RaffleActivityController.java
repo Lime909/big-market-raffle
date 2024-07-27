@@ -54,15 +54,16 @@ public class RaffleActivityController implements IRaffleActivityService {
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/armory">/api/v1/raffle/activity/armory</a>
      * 入参：{"activityId":100001,"userId":"lime"}
-     *
+     * </p>
+     * <p>
      * curl --request GET \
-     *   --url 'http://localhost:8091/api/v1/raffle/activity/armory?activityId=100301'
+     * --url 'http://localhost:8091/api/v1/raffle/activity/armory?activityId=100301'
      */
     @RequestMapping(value = "armory", method = RequestMethod.GET)
     @Override
     public Response<Boolean> armory(@RequestParam Long activityId) {
-        try{
-            log.info("活动装配，数据预热，开始 activityId: {}", activityId);
+        try {
+            log.info("活动装配，数据预热，开始 activityId:{}", activityId);
             /** 1.活动装配 */
             activityArmory.assembleActivitySkuByActivityId(activityId);
             /** 2.策略装配 */
@@ -72,10 +73,10 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(true)
                     .build();
-            log.info("活动装配，数据预热，完成 activityId: {}", activityId);
+            log.info("活动装配，数据预热，完成 activityId:{}", activityId);
             return response;
-        }catch (Exception e) {
-            log.error("抽奖策略装配失败 activity：{}", activityId, e);
+        } catch (Exception e) {
+            log.error("抽奖策略装配失败 activityId:{}", activityId, e);
             return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
@@ -91,22 +92,22 @@ public class RaffleActivityController implements IRaffleActivityService {
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/draw">/api/v1/raffle/activity/draw</a>
      * 入参：{"activityId":100001,"userId":"lime"}
-     *
+     * <p>
      * curl --request POST \
-     *   --url http://localhost:8091/api/v1/raffle/activity/draw \
-     *   --header 'content-type: application/json' \
-     *   --data '{
-     *     "userId":"lime",
-     *     "activityId": 100301
+     * --url http://localhost:8091/api/v1/raffle/activity/draw \
+     * --header 'content-type: application/json' \
+     * --data '{
+     * "userId":"lime",
+     * "activityId": 100301
      * }'
      */
     @RequestMapping(value = "draw", method = RequestMethod.POST)
     @Override
     public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO request) {
-        try{
+        try {
             log.info("活动抽奖 userId:{} activityId:{}", request.getUserId(), request.getActivityId());
             /** 1.参数校验 */
-            if(StringUtils.isBlank(request.getUserId()) || request.getActivityId() == null) {
+            if (StringUtils.isBlank(request.getUserId()) || request.getActivityId() == null) {
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
             }
 
@@ -118,6 +119,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(RaffleFactorEntity.builder()
                     .userId(orderEntity.getUserId())
                     .strategyId(orderEntity.getStrategyId())
+                    .endTime(orderEntity.getEndTime())
                     .build());
 
             /** 4.存放结果 - 写入中奖记录 */
@@ -142,18 +144,19 @@ public class RaffleActivityController implements IRaffleActivityService {
                             .awardIndex(raffleAwardEntity.getSort())
                             .build())
                     .build();
-        }catch (AppException e) {
-            log.error("活动抽奖失败 userId:{} activityId:{}",request.getUserId(), request.getActivityId(), e);
+        } catch (AppException e) {
+            log.error("活动抽奖失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(e.getCode())
                     .info(e.getInfo())
                     .build();
-        }catch (Exception e) {
-            log.error("活动抽奖失败 userId:{} activityId:{}",request.getUserId(), request.getActivityId(), e);
+        } catch (Exception e) {
+            log.error("活动抽奖失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();
         }
     }
+
 }

@@ -29,6 +29,14 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
     }
 
     @Override
+    public UserRaffleOrderEntity createOrder(String userId, Long activityId) {
+        return createOrder(PartakeRaffleActivityEntity.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .build());
+    }
+
+    @Override
     public UserRaffleOrderEntity createOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity) {
         /** 1.基础信息 */
         String userId = partakeRaffleActivityEntity.getUserId();
@@ -50,7 +58,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         /** 2.查询未被使用的订单参与记录 */
         UserRaffleOrderEntity userRaffleOrderEntity = activityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
         if (userRaffleOrderEntity != null) {
-            log.info("创建参与活动订单[已存在未消费] userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
+            log.info("创建参与活动订单 userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
             return userRaffleOrderEntity;
         }
 
@@ -70,13 +78,6 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         return userRaffleOrder;
     }
 
-    @Override
-    public UserRaffleOrderEntity createOrder(String userId, Long activityId) {
-        return createOrder(PartakeRaffleActivityEntity.builder()
-                .userId(userId)
-                .activityId(activityId)
-                .build());
-    }
 
     protected abstract CreatePartakeOrderAggregate doFilterAccount(String userId, Long activityId, Date currentDate);
 

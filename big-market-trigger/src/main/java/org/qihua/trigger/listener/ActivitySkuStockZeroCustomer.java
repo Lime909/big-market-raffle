@@ -27,17 +27,18 @@ public class ActivitySkuStockZeroCustomer {
     private IRaffleActivitySkuStockService skuStock;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.activity_sku_stock_zero}"))
-    public void listener(String message){
-        try{
+    public void listener(String message) {
+        try {
             log.info("监听活动sku库存耗尽为0消息 topic:{} message:{}", topic, message);
             /** 转换对象 */
-            BaseEvent.EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<Long>>(){}.getType());
+            BaseEvent.EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<Long>>() {
+            }.getType());
             Long sku = eventMessage.getData();
             /** 更新库存 */
             skuStock.clearActivitySkuStock(sku);
             /** 清空队列 */
             skuStock.clearQueueValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("监听活动sku库存为0消息，消费失败 topic:{} message:{}", topic, message);
             throw e;
         }

@@ -101,7 +101,7 @@ public class RaffleStrategyTest {
     }
 
     @Test
-    public void test_takeQuesueValue() throws InterruptedException{
+    public void test_takeQueueValue() throws InterruptedException{
         StrategyAwardStockKeyVO strategyAwardStockKeyVO = raffleStock.takeQueueValue();
         log.info("测试结果：{}", JSON.toJSONString(strategyAwardStockKeyVO));
     }

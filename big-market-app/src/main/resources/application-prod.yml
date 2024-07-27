@@ -6,13 +6,13 @@ server:
       min-spare: 50   # 初始化线程数,最小空闲线程数,默认是10
     accept-count: 10  # 等待队列长度
 
-  # 应用配置
-  app:
-    config:
-      # 版本，方便通过接口版本升级
-      api-version: v1
-      # 跨域，开发阶段可以设置为 * 不限制
-      cross-origin: '*'
+# 应用配置
+app:
+  config:
+    # 版本，方便通过接口版本升级
+    api-version: v1
+    # 跨域，开发阶段可以设置为 * 不限制
+    cross-origin: '*'
 
 
 # 线程池配置

@@ -35,7 +35,7 @@ public class DefaultTreeFactory {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class TreeActionEntity {
-        private RuleLogicCheckTypeVO ruleLogicCheckTypeVO;
+        private RuleLogicCheckTypeVO ruleLogicCheckType;
         private StrategyAwardVO strategyAwardVO;
     }
 

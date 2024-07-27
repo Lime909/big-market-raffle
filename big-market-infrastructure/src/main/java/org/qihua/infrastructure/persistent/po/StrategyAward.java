@@ -10,7 +10,6 @@ import java.util.Date;
  * @description 抽奖策略奖品明细配置 - 概率、规则
  * @date 2024-06-03 11:25:17
  */
-
 @Data
 public class StrategyAward {
     /** 自增ID */
@@ -37,5 +36,5 @@ public class StrategyAward {
     private Date createTime;
     /** 修改时间 */
     private Date updateTime;
-}
 
+}

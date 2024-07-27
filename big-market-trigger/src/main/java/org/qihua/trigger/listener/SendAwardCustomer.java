@@ -23,10 +23,9 @@ public class SendAwardCustomer {
 
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_award}"))
     public void listener(String message) {
-        try{
+        try {
             log.info("监听用户奖品发送消息 topic:{} message:{}", topic, message);
-
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("监听用户奖品发送消息，消费失败 topic:{} message:{}", topic, message);
             throw e;
         }
