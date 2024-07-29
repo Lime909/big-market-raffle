@@ -1,6 +1,7 @@
 package org.qihua.infrastructure.persistent.repository;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.activity.event.ActivitySkuStockZeroMessageEvent;
 import org.qihua.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
@@ -452,6 +453,7 @@ public class ActivityRepository implements IActivityRepository {
         List<ActivitySkuEntity> activitySkuEntities = new ArrayList<>(raffleActivitySkus.size());
         for (RaffleActivitySku raffleActivitySku : raffleActivitySkus) {
             ActivitySkuEntity activitySkuEntity = new ActivitySkuEntity();
+            activitySkuEntity.setActivityId(activityId);
             activitySkuEntity.setSku(raffleActivitySku.getSku());
             activitySkuEntity.setActivityId(raffleActivitySku.getActivityId());
             activitySkuEntity.setActivityCountId(raffleActivitySku.getActivityCountId());
