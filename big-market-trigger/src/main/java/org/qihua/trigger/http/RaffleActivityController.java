@@ -1,5 +1,6 @@
 package org.qihua.trigger.http;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.qihua.domain.activity.model.entity.UserRaffleOrderEntity;
@@ -8,6 +9,9 @@ import org.qihua.domain.activity.service.armory.IActivityArmory;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 import org.qihua.domain.award.model.valobj.AwardStateVO;
 import org.qihua.domain.award.service.IAwardService;
+import org.qihua.domain.rebate.model.entity.BehaviorEntity;
+import org.qihua.domain.rebate.model.valobj.BehaviorTypeVO;
+import org.qihua.domain.rebate.service.IBehaviorRebateService;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 import org.qihua.domain.strategy.service.IRaffleStrategy;
@@ -21,7 +25,9 @@ import org.qihua.types.model.Response;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Lime
@@ -34,6 +40,8 @@ import java.util.Date;
 @RequestMapping("/api/${app.config.api-version}/raffle/activity/")
 public class RaffleActivityController implements IRaffleActivityService {
 
+    private SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
+
     @Resource
     private IActivityArmory activityArmory;
     @Resource
@@ -44,7 +52,8 @@ public class RaffleActivityController implements IRaffleActivityService {
     private IRaffleStrategy raffleStrategy;
     @Resource
     private IAwardService awardService;
-
+    @Resource
+    private IBehaviorRebateService behaviorRebateService;
 
     /**
      * 活动装配 - 数据预热 | 把活动配置的对应的 sku 一起装配
@@ -153,6 +162,46 @@ public class RaffleActivityController implements IRaffleActivityService {
         } catch (Exception e) {
             log.error("活动抽奖失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * 日历签到返利接口
+     *
+     * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/calendar_sign_rebate">/api/v1/raffle/activity/calendar_sign_rebate</a>
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)
+    @Override
+    public Response<Boolean> calendarSignRebate(String userId) {
+        try {
+            log.info("日历签到返利开始 userId:{}", userId);
+            BehaviorEntity behaviorEntity = new BehaviorEntity();
+            behaviorEntity.setUserId(userId);
+            behaviorEntity.setBehaviorTypeVO(BehaviorTypeVO.SIGN);
+            behaviorEntity.setOutBusinessNo(dateFormatDay.format(new Date()));
+
+            List<String> orderIds = behaviorRebateService.createOrder(behaviorEntity);
+            log.info("日历签到返利完成 userId:{} orderIds:{}", userId, JSON.toJSONString(orderIds));
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(true)
+                    .build();
+        } catch (AppException e) {
+            log.info("日历签到返利异常 userId:{}", userId, e);
+            return Response.<Boolean>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        } catch (Exception e) {
+            log.info("日历签到返利异常 userId:{}", userId, e);
+            return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();

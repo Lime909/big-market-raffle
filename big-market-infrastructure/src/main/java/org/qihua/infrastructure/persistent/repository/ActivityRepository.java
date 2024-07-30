@@ -142,7 +142,7 @@ public class ActivityRepository implements IActivityRepository {
             raffleActivityOrder.setState(activityOrderEntity.getState().getCode());
             raffleActivityOrder.setOutBusinessNo(activityOrderEntity.getOutBusinessNo());
 
-            /** 账户对象 */
+            /** 账户对象 - 总账户 */
             RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
             raffleActivityAccount.setUserId(createQuotaOrderAggregate.getUserId());
             raffleActivityAccount.setActivityId(createQuotaOrderAggregate.getActivityId());
@@ -153,6 +153,23 @@ public class ActivityRepository implements IActivityRepository {
             raffleActivityAccount.setMonthCount(createQuotaOrderAggregate.getMonthCount());
             raffleActivityAccount.setMonthCountSurplus(createQuotaOrderAggregate.getMonthCount());
 
+            /** 账户对象 - 月账户 */
+            RaffleActivityAccountMonth raffleActivityAccountMonth = new RaffleActivityAccountMonth();
+            raffleActivityAccountMonth.setUserId(createQuotaOrderAggregate.getUserId());
+            raffleActivityAccountMonth.setActivityId(createQuotaOrderAggregate.getActivityId());
+            raffleActivityAccountMonth.setMonth(raffleActivityAccountMonth.currentMonth());
+            raffleActivityAccountMonth.setMonthCount(createQuotaOrderAggregate.getMonthCount());
+            raffleActivityAccountMonth.setMonthCountSurplus(createQuotaOrderAggregate.getMonthCount());
+
+            /** 账户对象 - 日账户 */
+            RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
+            raffleActivityAccountDay.setUserId(createQuotaOrderAggregate.getUserId());
+            raffleActivityAccountDay.setActivityId(createQuotaOrderAggregate.getActivityId());
+            raffleActivityAccountDay.setDay(raffleActivityAccountDay.currentDay());
+            raffleActivityAccountDay.setDayCount(createQuotaOrderAggregate.getMonthCount());
+            raffleActivityAccountDay.setDayCountSurplus(createQuotaOrderAggregate.getMonthCount());
+
+
             /** 以用户ID作为切分键，通过dbRouter设定路由 */
             dbRouter.doRouter(createQuotaOrderAggregate.getUserId());
             /** 编程式事务 */
@@ -160,12 +177,16 @@ public class ActivityRepository implements IActivityRepository {
                 try {
                     /** 1.写入订单 */
                     raffleActivityOrderDao.insert(raffleActivityOrder);
-                    /** 2.更新账户 */
+                    /** 2.更新账户 - 总 */
                     int count = raffleActivityAccountDao.updateAccountQuota(raffleActivityAccount);
                     /** 3.创建账户-更新 为0，则账户不存在，创建新账户 */
                     if (count == 0) {
                         raffleActivityAccountDao.insert(raffleActivityAccount);
                     }
+                    /** 4.更新账户 - 月 */
+                    raffleActivityAccountMonthDao.addAccountQuota(raffleActivityAccountMonth);
+                    /** 5.更新账户 - 日 */
+                    raffleActivityAccountDayDao.addAccountQuota(raffleActivityAccountDay);
                     return 1;
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();

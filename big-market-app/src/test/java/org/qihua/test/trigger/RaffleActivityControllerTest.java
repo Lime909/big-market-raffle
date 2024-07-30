@@ -35,13 +35,20 @@ public class RaffleActivityControllerTest {
 
     @Test
     public void test_draw() {
-        ActivityDrawRequestDTO requestDTO = new ActivityDrawRequestDTO();
-        requestDTO.setActivityId(100301L);
-        requestDTO.setUserId("xiaofuge");
-        Response<ActivityDrawResponseDTO> responseDTO = raffleActivityService.draw(requestDTO);
+        for (int i = 0; i < 20; i++) {
+            ActivityDrawRequestDTO requestDTO = new ActivityDrawRequestDTO();
+            requestDTO.setActivityId(100301L);
+            requestDTO.setUserId("xiaofuge");
+            Response<ActivityDrawResponseDTO> responseDTO = raffleActivityService.draw(requestDTO);
 
-        log.info("请求参数：{}", JSON.toJSONString(requestDTO));
-        log.info("抽奖结果：{}", JSON.toJSONString(responseDTO));
+            log.info("请求参数：{}", JSON.toJSONString(requestDTO));
+            log.info("抽奖结果：{}", JSON.toJSONString(responseDTO));
+        }
     }
 
+    @Test
+    public void test_calendarSignRebate() {
+        Response<Boolean> response = raffleActivityService.calendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
 }
