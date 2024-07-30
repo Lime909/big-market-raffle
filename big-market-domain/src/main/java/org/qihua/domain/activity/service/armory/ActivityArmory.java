@@ -30,6 +30,7 @@ public class ActivityArmory implements IActivityArmory, IActivityDispatch {
             /** 预热活动次数【查询时预热到缓存】*/
             activityRepository.queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
         }
+
         /** 预热活动【查询时预热到缓存】*/
         activityRepository.queryRaffleActivityByActivityId(activityId);
 
@@ -41,8 +42,10 @@ public class ActivityArmory implements IActivityArmory, IActivityDispatch {
         /** 预热活动sku */
         ActivitySkuEntity activitySkuEntity = activityRepository.queryActivitySku(sku);
         cacheActivitySkuStockCount(sku, activitySkuEntity.getStockCountSurplus());
+
         /** 预热活动【查询时预热到缓存】*/
         activityRepository.queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
+
         /** 预热活动次数【查询时预热到缓存】*/
         activityRepository.queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
 
