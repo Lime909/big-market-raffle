@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.qihua.trigger.api.IRaffleActivityService;
 import org.qihua.trigger.api.dto.ActivityDrawRequestDTO;
 import org.qihua.trigger.api.dto.ActivityDrawResponseDTO;
+import org.qihua.trigger.api.dto.UserActivityAccountRequestDTO;
+import org.qihua.trigger.api.dto.UserActivityAccountResponseDTO;
 import org.qihua.trigger.http.RaffleActivityController;
 import org.qihua.types.model.Response;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +37,7 @@ public class RaffleActivityControllerTest {
 
     @Test
     public void test_draw() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1; i++) {
             ActivityDrawRequestDTO requestDTO = new ActivityDrawRequestDTO();
             requestDTO.setActivityId(100301L);
             requestDTO.setUserId("xiaofuge");
@@ -51,4 +53,24 @@ public class RaffleActivityControllerTest {
         Response<Boolean> response = raffleActivityService.calendarSignRebate("xiaofuge");
         log.info("测试结果：{}", JSON.toJSONString(response));
     }
+
+    @Test
+    public void test_isCalendarSignRebate() {
+        Response<Boolean> response = raffleActivityService.isCalendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
+
+    @Test
+    public void test_queryUserActivityAccount() {
+        UserActivityAccountRequestDTO request = new UserActivityAccountRequestDTO();
+        request.setActivityId(100301L);
+        request.setUserId("xiaofuge");
+
+        // 查询数据
+        Response<UserActivityAccountResponseDTO> response = raffleActivityService.queryUserActivityAccount(request);
+
+        log.info("请求参数：{}", JSON.toJSONString(request));
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
+
 }

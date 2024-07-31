@@ -1,8 +1,11 @@
 package org.qihua.infrastructure.persistent.dao;
 
+import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import cn.bugstack.middleware.db.router.annotation.DBRouterStrategy;
 import org.apache.ibatis.annotations.Mapper;
 import org.qihua.infrastructure.persistent.po.UserBehaviorRebateOrder;
+
+import java.util.List;
 
 /**
  * @Author: Lime
@@ -15,4 +18,6 @@ public interface IUserBehaviorRebateOrderDao {
 
     void insert(UserBehaviorRebateOrder userBehaviorRebateOrder);
 
+    @DBRouter
+    List<UserBehaviorRebateOrder> queryOrderByOutBusinessNo(UserBehaviorRebateOrder userBehaviorRebateOrderReq);
 }

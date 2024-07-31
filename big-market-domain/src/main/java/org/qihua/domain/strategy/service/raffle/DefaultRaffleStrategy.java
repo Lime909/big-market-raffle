@@ -3,6 +3,7 @@ package org.qihua.domain.strategy.service.raffle;
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.volobj.RuleTreeVO;
+import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
@@ -84,5 +85,16 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
     @Override
     public Map<String, Integer> queryAwardRuleLockCount(String[] treeIds) {
         return repository.queryAwardRuleLockCount(treeIds);
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
+        return repository.queryAwardRuleWeight(strategyId);
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeightByActivityId(Long activityId) {
+        Long strategyId = repository.queryStrategyIdByActivityId(activityId);
+        return queryAwardRuleWeight(strategyId);
     }
 }

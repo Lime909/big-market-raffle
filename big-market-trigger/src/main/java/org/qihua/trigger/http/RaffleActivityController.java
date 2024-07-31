@@ -3,13 +3,16 @@ package org.qihua.trigger.http;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.qihua.domain.activity.model.entity.ActivityAccountEntity;
 import org.qihua.domain.activity.model.entity.UserRaffleOrderEntity;
+import org.qihua.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.qihua.domain.activity.service.IRaffleActivityPartakeService;
 import org.qihua.domain.activity.service.armory.IActivityArmory;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 import org.qihua.domain.award.model.valobj.AwardStateVO;
 import org.qihua.domain.award.service.IAwardService;
 import org.qihua.domain.rebate.model.entity.BehaviorEntity;
+import org.qihua.domain.rebate.model.entity.BehaviorRebateOrderEntity;
 import org.qihua.domain.rebate.model.valobj.BehaviorTypeVO;
 import org.qihua.domain.rebate.service.IBehaviorRebateService;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
@@ -19,6 +22,8 @@ import org.qihua.domain.strategy.service.armory.IStrategyArmory;
 import org.qihua.trigger.api.IRaffleActivityService;
 import org.qihua.trigger.api.dto.ActivityDrawRequestDTO;
 import org.qihua.trigger.api.dto.ActivityDrawResponseDTO;
+import org.qihua.trigger.api.dto.UserActivityAccountRequestDTO;
+import org.qihua.trigger.api.dto.UserActivityAccountResponseDTO;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
 import org.qihua.types.model.Response;
@@ -40,7 +45,7 @@ import java.util.List;
 @RequestMapping("/api/${app.config.api-version}/raffle/activity/")
 public class RaffleActivityController implements IRaffleActivityService {
 
-    private SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
 
     @Resource
     private IActivityArmory activityArmory;
@@ -48,6 +53,8 @@ public class RaffleActivityController implements IRaffleActivityService {
     private IStrategyArmory strategyArmory;
     @Resource
     private IRaffleActivityPartakeService raffleActivityPartakeService;
+    @Resource
+    private IRaffleActivityAccountQuotaService raffleActivityAccountQuotaService;
     @Resource
     private IRaffleStrategy raffleStrategy;
     @Resource
@@ -170,7 +177,7 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     /**
      * 日历签到返利接口
-     *
+     * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/calendar_sign_rebate">/api/v1/raffle/activity/calendar_sign_rebate</a>
      *
      * @param userId
@@ -202,6 +209,76 @@ public class RaffleActivityController implements IRaffleActivityService {
         } catch (Exception e) {
             log.info("日历签到返利异常 userId:{}", userId, e);
             return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * 判断是否签到接口
+     * <p>
+     * curl -X POST http://localhost:8091/api/v1/raffle/activity/is_calendar_sign_rebate -d "userId=xiaofuge" -H "Content-Type: application/x-www-form-urlencoded"
+     */
+    @RequestMapping(value = "is_calendar_sign_rebate", method = RequestMethod.POST)
+    @Override
+    public Response<Boolean> isCalendarSignRebate(String userId) {
+        try {
+            log.info("查询用户是否完成日历签到返利开始 userId:{}", userId);
+            String outBusinessNo = dateFormatDay.format(new Date());
+            List<BehaviorRebateOrderEntity> behaviorRebateOrderEntities = behaviorRebateService.queryOrderByOutBusinessNo(userId, outBusinessNo);
+            log.info("查询用户是否完成日历签到返利完成 userId:{}, orders.size():{}", userId, behaviorRebateOrderEntities.size());
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(!behaviorRebateOrderEntities.isEmpty())
+                    .build();
+        } catch (Exception e) {
+            log.error("查询用户是否完成日历签到返利失败 userId:{}", userId, e);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    /**
+     * 查询账户额度
+     * <p>
+     * curl --request POST \
+     * --url http://localhost:8091/api/v1/raffle/activity/query_user_activity_account \
+     * --header 'content-type: application/json' \
+     * --data '{
+     * "userId":"xiaofuge",
+     * "activityId": 100301
+     * }'
+     */
+    @RequestMapping(value = "query_user_activity", method = RequestMethod.POST)
+    @Override
+    public Response<UserActivityAccountResponseDTO> queryUserActivityAccount(UserActivityAccountRequestDTO request) {
+        try {
+            log.info("查询用户活动账户开始 userId:{} activityId:{}", request.getUserId(), request.getActivityId());
+            /** 1.参数校验 */
+            if(StringUtils.isBlank(request.getUserId()) || request.getActivityId() == null) {
+                throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
+            }
+            ActivityAccountEntity activityAccountEntity = raffleActivityAccountQuotaService.queryActivityAccountEntity(request.getActivityId(), request.getUserId());
+            UserActivityAccountResponseDTO userActivityAccountResponseDTO = new UserActivityAccountResponseDTO();
+            userActivityAccountResponseDTO.setTotalCount(activityAccountEntity.getTotalCount());
+            userActivityAccountResponseDTO.setTotalCountSurplus(activityAccountEntity.getTotalCountSurplus());
+            userActivityAccountResponseDTO.setDayCount(activityAccountEntity.getDayCount());
+            userActivityAccountResponseDTO.setDayCountSurplus(activityAccountEntity.getDayCountSurplus());
+            userActivityAccountResponseDTO.setMonthCount(activityAccountEntity.getMonthCount());
+            userActivityAccountResponseDTO.setMonthCountSurplus(activityAccountEntity.getMonthCountSurplus());
+            log.info("查询用户活动账户完成 userId:{} activityId:{} dto:{}", request.getUserId(), request.getActivityId(), userActivityAccountResponseDTO);
+            return Response.<UserActivityAccountResponseDTO>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(userActivityAccountResponseDTO)
+                    .build();
+        } catch (Exception e) {
+            log.error("查询用户活动账户失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
+            return Response.<UserActivityAccountResponseDTO>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();

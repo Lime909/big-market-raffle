@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
+import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
 import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.service.IRaffleRule;
 import org.qihua.domain.strategy.service.IRaffleStock;
 import org.qihua.domain.strategy.service.IRaffleStrategy;
 import org.qihua.domain.strategy.service.armory.IStrategyArmory;
@@ -18,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -40,6 +43,8 @@ public class RaffleStrategyTest {
     private RuleLockLogicTreeNode ruleLockLogicTreeNode;
     @Resource
     private IRaffleStock raffleStock;
+    @Resource
+    private IRaffleRule raffleRule;
 
     @Before
     public void setUp() {
@@ -47,9 +52,9 @@ public class RaffleStrategyTest {
         log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100001L));
         log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100006L));
 
-        // 通过反射 mock 规则中的值
-        ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 4900L);
-        ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleCount", 10L);
+//        // 通过反射 mock 规则中的值
+//        ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 4900L);
+//        ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleCount", 10L);
     }
 
     @Test
@@ -105,6 +110,13 @@ public class RaffleStrategyTest {
         StrategyAwardStockKeyVO strategyAwardStockKeyVO = raffleStock.takeQueueValue();
         log.info("测试结果：{}", JSON.toJSONString(strategyAwardStockKeyVO));
     }
+
+    @Test
+    public void test_raffleRule() {
+        List<RuleWeightVO> ruleWeightVOS = raffleRule.queryAwardRuleWeightByActivityId(100301L);
+        log.info("测试结果：{}", JSON.toJSONString(ruleWeightVOS));
+    }
+
 
 }
 

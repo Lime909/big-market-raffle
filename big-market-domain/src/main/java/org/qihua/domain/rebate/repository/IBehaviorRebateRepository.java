@@ -1,6 +1,7 @@
 package org.qihua.domain.rebate.repository;
 
 import org.qihua.domain.rebate.model.aggerate.BehaviorRebateAggregate;
+import org.qihua.domain.rebate.model.entity.BehaviorRebateOrderEntity;
 import org.qihua.domain.rebate.model.valobj.BehaviorTypeVO;
 import org.qihua.domain.rebate.model.valobj.DailyBehaviorRebateVO;
 
@@ -16,4 +17,6 @@ public interface IBehaviorRebateRepository {
     List<DailyBehaviorRebateVO> queryDailyBehaviorRebateConfig(BehaviorTypeVO behaviorTypeVO);
 
     void saveUserRebateRecord(String userId, List<BehaviorRebateAggregate> behaviorRebateAggregates);
+
+    List<BehaviorRebateOrderEntity> queryOrderByOutBusinessNo(String userId, String outBusinessNo);
 }

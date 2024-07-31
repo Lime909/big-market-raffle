@@ -25,11 +25,6 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
     @Resource
     protected IStrategyDispatch strategyDispatch;
 
-    /**
-     * 用户抽奖次数，后续完成这部分流程开发的时候，从数据库/Redis中读取
-     */
-    public Long userScore = 0L;
-
     @Override
     public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
         log.info("抽奖责任链-权重开始 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
@@ -46,6 +41,8 @@ public class RuleWeightLogicChain extends AbstractLogicChain {
         /** 2.转换keys，默认排序 */
         List<Long> analyticalSortedKeys = new ArrayList<>(analyticalValueGroup.keySet());
         Collections.sort(analyticalSortedKeys);
+
+        Integer userScore = repository.queryActivityAccountTotalUseCount(userId, strategyId);
 
         /** 3.找出最小符合的值 */
         Long nextValue = analyticalSortedKeys.stream()

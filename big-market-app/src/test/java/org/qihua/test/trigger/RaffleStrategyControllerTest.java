@@ -8,6 +8,8 @@ import org.qihua.domain.strategy.service.IRaffleStrategy;
 import org.qihua.trigger.api.IRaffleStrategyService;
 import org.qihua.trigger.api.dto.RaffleAwardListRequestDTO;
 import org.qihua.trigger.api.dto.RaffleAwardListResponseDTO;
+import org.qihua.trigger.api.dto.RaffleStrategyRuleWeightRequestDTO;
+import org.qihua.trigger.api.dto.RaffleStrategyRuleWeightResponseDTO;
 import org.qihua.types.model.Response;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,5 +40,17 @@ public class RaffleStrategyControllerTest {
         log.info("请求参数：{}", JSON.toJSONString(requestDTO));
         log.info("测试结果：{}", JSON.toJSONString(responseDTO));
     }
+
+    @Test
+    public void test_queryRaffleStrategyRuleWeight() {
+        RaffleStrategyRuleWeightRequestDTO request = new RaffleStrategyRuleWeightRequestDTO();
+        request.setUserId("xiaofuge");
+        request.setActivityId(100301L);
+
+        Response<List<RaffleStrategyRuleWeightResponseDTO>> response = raffleStrategyService.queryRaffleStrategyRuleWeight(request);
+        log.info("请求参数：{}", JSON.toJSONString(request));
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
+
 
 }
