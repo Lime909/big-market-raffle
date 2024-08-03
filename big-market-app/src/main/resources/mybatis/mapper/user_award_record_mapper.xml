@@ -23,4 +23,5 @@
         values
             (#{userId},#{activityId},#{strategyId},#{orderId},#{awardId},#{awardTitle},#{awardTime},#{awardState},now(),now())
     </insert>
+
 </mapper>

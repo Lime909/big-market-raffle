@@ -23,6 +23,7 @@ public class ActivitySkuStockZeroCustomer {
 
     @Value("${spring.rabbitmq.topic.activity_sku_stock_zero}")
     private String topic;
+
     @Resource
     private IRaffleActivitySkuStockService skuStock;
 
@@ -43,4 +44,5 @@ public class ActivitySkuStockZeroCustomer {
             throw e;
         }
     }
+
 }

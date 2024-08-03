@@ -21,11 +21,11 @@ import java.util.Map;
 @Slf4j
 public class DecisionTreeEngine implements IDecisionTreeEngine {
 
-    private final Map<String, ILogicTreeNode> logicTreeNodeMap;
+    private final Map<String, ILogicTreeNode> logicTreeNodeGroup;
     private final RuleTreeVO ruleTreeVO;
 
-    public DecisionTreeEngine(Map<String, ILogicTreeNode> logicTreeNodeMap, RuleTreeVO ruleTreeVO) {
-        this.logicTreeNodeMap = logicTreeNodeMap;
+    public DecisionTreeEngine(Map<String, ILogicTreeNode> logicTreeNodeGroup, RuleTreeVO ruleTreeVO) {
+        this.logicTreeNodeGroup = logicTreeNodeGroup;
         this.ruleTreeVO = ruleTreeVO;
     }
 
@@ -41,7 +41,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         RuleTreeNodeVO ruleTreeNode = treeNodeMap.get(nextNode);
         while (nextNode != null) {
             /** 获取决策节点 */
-            ILogicTreeNode logicTreeNode = logicTreeNodeMap.get(ruleTreeNode.getRuleKey());
+            ILogicTreeNode logicTreeNode = logicTreeNodeGroup.get(ruleTreeNode.getRuleKey());
             String ruleValue = ruleTreeNode.getRuleValue();
 
             /** 决策节点计算 */
@@ -57,7 +57,6 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         }
 
         return strategyAwardData;
-
     }
 
     public String nextNode(String matterValue, List<RuleTreeNodeLineVO> treeNodeLineVOList) {

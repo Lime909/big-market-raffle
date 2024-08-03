@@ -36,9 +36,9 @@ public class RaffleActivityAccountDay {
     /** 更新时间 */
     private Date updateTime;
 
-    private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
 
-    public String currentDay() {
+    public static String currentDay() {
         return dateFormatDay.format(new Date());
     }
 }

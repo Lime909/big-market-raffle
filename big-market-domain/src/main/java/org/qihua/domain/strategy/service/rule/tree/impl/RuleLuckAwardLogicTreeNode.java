@@ -19,7 +19,7 @@ import java.util.Date;
 public class RuleLuckAwardLogicTreeNode implements ILogicTreeNode {
 
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue, Date endTime) {
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue, Date endDateTime) {
         log.info("规则过滤-兜底奖品 userId:{} strategyId:{} awardId:{} ruleValue:{}", userId, strategyId, awardId, ruleValue);
         String[] split = ruleValue.split(Constants.COLON);
         if (split.length == 0) {
@@ -39,4 +39,5 @@ public class RuleLuckAwardLogicTreeNode implements ILogicTreeNode {
                         .build())
                 .build();
     }
+
 }

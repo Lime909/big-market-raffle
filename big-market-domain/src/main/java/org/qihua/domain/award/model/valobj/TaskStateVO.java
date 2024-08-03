@@ -11,9 +11,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TaskStateVO {
+
     create("create", "创建"),
-    completed("completed","任务完成"),
-    fail("fail","任务失败"),
+    complete("complete", "发送完成"),
+    fail("fail", "发送失败"),
     ;
 
     private final String code;

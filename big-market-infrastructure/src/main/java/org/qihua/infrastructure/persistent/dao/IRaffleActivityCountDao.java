@@ -13,4 +13,5 @@ import org.qihua.infrastructure.persistent.po.RaffleActivityCount;
 public interface IRaffleActivityCountDao {
 
     RaffleActivityCount queryRaffleActivityCountByActivityCountId(Long activityCountId);
+
 }

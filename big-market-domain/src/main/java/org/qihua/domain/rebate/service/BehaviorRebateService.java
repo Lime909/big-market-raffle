@@ -78,7 +78,7 @@ public class BehaviorRebateService implements IBehaviorRebateService {
             taskEntity.setTopic(sendRebateMessageEvent.topic());
             taskEntity.setMessageId(rebateMessageEventMessage.getId());
             taskEntity.setMessage(rebateMessageEventMessage);
-            taskEntity.setState(TaskStateVO.complete);
+            taskEntity.setState(TaskStateVO.create);
 
             /** 组装聚合对象 */
             BehaviorRebateAggregate behaviorRebateAggregate = BehaviorRebateAggregate.builder()
@@ -100,4 +100,5 @@ public class BehaviorRebateService implements IBehaviorRebateService {
     public List<BehaviorRebateOrderEntity> queryOrderByOutBusinessNo(String userId, String outBusinessNo) {
         return behaviorRebateRepository.queryOrderByOutBusinessNo(userId, outBusinessNo);
     }
+
 }

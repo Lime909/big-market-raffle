@@ -45,12 +45,8 @@ import java.util.List;
 @RequestMapping("/api/${app.config.api-version}/raffle/activity/")
 public class RaffleActivityController implements IRaffleActivityService {
 
-    private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyyMMdd");
 
-    @Resource
-    private IActivityArmory activityArmory;
-    @Resource
-    private IStrategyArmory strategyArmory;
     @Resource
     private IRaffleActivityPartakeService raffleActivityPartakeService;
     @Resource
@@ -59,6 +55,10 @@ public class RaffleActivityController implements IRaffleActivityService {
     private IRaffleStrategy raffleStrategy;
     @Resource
     private IAwardService awardService;
+    @Resource
+    private IActivityArmory activityArmory;
+    @Resource
+    private IStrategyArmory strategyArmory;
     @Resource
     private IBehaviorRebateService behaviorRebateService;
 
@@ -92,7 +92,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             log.info("活动装配，数据预热，完成 activityId:{}", activityId);
             return response;
         } catch (Exception e) {
-            log.error("抽奖策略装配失败 activityId:{}", activityId, e);
+            log.error("活动装配，数据预热，失败 activityId:{}", activityId, e);
             return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
@@ -135,11 +135,11 @@ public class RaffleActivityController implements IRaffleActivityService {
             RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(RaffleFactorEntity.builder()
                     .userId(orderEntity.getUserId())
                     .strategyId(orderEntity.getStrategyId())
-                    .endTime(orderEntity.getEndTime())
+                    .endDateTime(orderEntity.getEndDateTime())
                     .build());
 
             /** 4.存放结果 - 写入中奖记录 */
-            UserAwardRecordEntity userAwardRecordEntity = UserAwardRecordEntity.builder()
+            UserAwardRecordEntity userAwardRecord = UserAwardRecordEntity.builder()
                     .userId(orderEntity.getUserId())
                     .activityId(orderEntity.getActivityId())
                     .strategyId(orderEntity.getStrategyId())
@@ -149,7 +149,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .awardTime(new Date())
                     .awardState(AwardStateVO.create)
                     .build();
-            awardService.saveUserAwardRecord(userAwardRecordEntity);
+            awardService.saveUserAwardRecord(userAwardRecord);
 
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
@@ -185,7 +185,7 @@ public class RaffleActivityController implements IRaffleActivityService {
      */
     @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)
     @Override
-    public Response<Boolean> calendarSignRebate(String userId) {
+    public Response<Boolean> calendarSignRebate(@RequestParam String userId) {
         try {
             log.info("日历签到返利开始 userId:{}", userId);
             BehaviorEntity behaviorEntity = new BehaviorEntity();
@@ -201,16 +201,17 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .data(true)
                     .build();
         } catch (AppException e) {
-            log.info("日历签到返利异常 userId:{}", userId, e);
+            log.error("日历签到返利异常 userId:{} ", userId, e);
             return Response.<Boolean>builder()
                     .code(e.getCode())
                     .info(e.getInfo())
                     .build();
         } catch (Exception e) {
-            log.info("日历签到返利异常 userId:{}", userId, e);
+            log.error("日历签到返利失败 userId:{}", userId);
             return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
+                    .data(false)
                     .build();
         }
     }
@@ -222,12 +223,12 @@ public class RaffleActivityController implements IRaffleActivityService {
      */
     @RequestMapping(value = "is_calendar_sign_rebate", method = RequestMethod.POST)
     @Override
-    public Response<Boolean> isCalendarSignRebate(String userId) {
+    public Response<Boolean> isCalendarSignRebate(@RequestParam String userId) {
         try {
             log.info("查询用户是否完成日历签到返利开始 userId:{}", userId);
             String outBusinessNo = dateFormatDay.format(new Date());
             List<BehaviorRebateOrderEntity> behaviorRebateOrderEntities = behaviorRebateService.queryOrderByOutBusinessNo(userId, outBusinessNo);
-            log.info("查询用户是否完成日历签到返利完成 userId:{}, orders.size():{}", userId, behaviorRebateOrderEntities.size());
+            log.info("查询用户是否完成日历签到返利完成 userId:{} orders.size:{}", userId, behaviorRebateOrderEntities.size());
             return Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
@@ -238,6 +239,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
+                    .data(false)
                     .build();
         }
     }
@@ -253,9 +255,9 @@ public class RaffleActivityController implements IRaffleActivityService {
      * "activityId": 100301
      * }'
      */
-    @RequestMapping(value = "query_user_activity", method = RequestMethod.POST)
+    @RequestMapping(value = "query_user_activity_account", method = RequestMethod.POST)
     @Override
-    public Response<UserActivityAccountResponseDTO> queryUserActivityAccount(UserActivityAccountRequestDTO request) {
+    public Response<UserActivityAccountResponseDTO> queryUserActivityAccount(@RequestBody UserActivityAccountRequestDTO request) {
         try {
             log.info("查询用户活动账户开始 userId:{} activityId:{}", request.getUserId(), request.getActivityId());
             /** 1.参数校验 */
@@ -263,14 +265,15 @@ public class RaffleActivityController implements IRaffleActivityService {
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
             }
             ActivityAccountEntity activityAccountEntity = raffleActivityAccountQuotaService.queryActivityAccountEntity(request.getActivityId(), request.getUserId());
-            UserActivityAccountResponseDTO userActivityAccountResponseDTO = new UserActivityAccountResponseDTO();
-            userActivityAccountResponseDTO.setTotalCount(activityAccountEntity.getTotalCount());
-            userActivityAccountResponseDTO.setTotalCountSurplus(activityAccountEntity.getTotalCountSurplus());
-            userActivityAccountResponseDTO.setDayCount(activityAccountEntity.getDayCount());
-            userActivityAccountResponseDTO.setDayCountSurplus(activityAccountEntity.getDayCountSurplus());
-            userActivityAccountResponseDTO.setMonthCount(activityAccountEntity.getMonthCount());
-            userActivityAccountResponseDTO.setMonthCountSurplus(activityAccountEntity.getMonthCountSurplus());
-            log.info("查询用户活动账户完成 userId:{} activityId:{} dto:{}", request.getUserId(), request.getActivityId(), userActivityAccountResponseDTO);
+            UserActivityAccountResponseDTO userActivityAccountResponseDTO = UserActivityAccountResponseDTO.builder()
+                    .totalCount(activityAccountEntity.getTotalCount())
+                    .totalCountSurplus(activityAccountEntity.getTotalCountSurplus())
+                    .dayCount(activityAccountEntity.getDayCount())
+                    .dayCountSurplus(activityAccountEntity.getDayCountSurplus())
+                    .monthCount(activityAccountEntity.getMonthCount())
+                    .monthCountSurplus(activityAccountEntity.getMonthCountSurplus())
+                    .build();
+            log.info("查询用户活动账户完成 userId:{} activityId:{} dto:{}", request.getUserId(), request.getActivityId(), JSON.toJSONString(userActivityAccountResponseDTO));
             return Response.<UserActivityAccountResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())

@@ -52,7 +52,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
             activityAccountMonthEntity.setActivityId(activityId);
             activityAccountMonthEntity.setMonth(month);
             activityAccountMonthEntity.setMonthCount(activityAccountEntity.getMonthCount());
-            activityAccountMonthEntity.setMonthCountSurplus(activityAccountEntity.getMonthCountSurplus());
+            activityAccountMonthEntity.setMonthCountSurplus(activityAccountEntity.getMonthCount());
         }
 
         String day = dateFormatDay.format(currentDate);
@@ -70,7 +70,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
             activityAccountDayEntity.setActivityId(activityId);
             activityAccountDayEntity.setDay(day);
             activityAccountDayEntity.setDayCount(activityAccountEntity.getDayCount());
-            activityAccountDayEntity.setDayCountSurplus(activityAccountEntity.getDayCountSurplus());
+            activityAccountDayEntity.setDayCountSurplus(activityAccountEntity.getDayCount());
         }
 
         /** 构建值对象 */
@@ -90,15 +90,15 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake 
     protected UserRaffleOrderEntity buildUserRaffleOrder(String userId, Long activityId, Date currentDate) {
         ActivityEntity activityEntity = activityRepository.queryRaffleActivityByActivityId(activityId);
         /** 构建订单 */
-        UserRaffleOrderEntity userRaffleOrderEntity = new UserRaffleOrderEntity();
-        userRaffleOrderEntity.setUserId(userId);
-        userRaffleOrderEntity.setActivityId(activityId);
-        userRaffleOrderEntity.setActivityName(activityEntity.getActivityName());
-        userRaffleOrderEntity.setStrategyId(activityEntity.getStrategyId());
-        userRaffleOrderEntity.setOrderId(RandomStringUtils.randomNumeric(12));
-        userRaffleOrderEntity.setOrderTime(currentDate);
-        userRaffleOrderEntity.setOrderState(UserRaffleOrderStateVO.create);
-        userRaffleOrderEntity.setEndTime(activityEntity.getEndDateTime());
-        return userRaffleOrderEntity;
+        UserRaffleOrderEntity userRaffleOrder = new UserRaffleOrderEntity();
+        userRaffleOrder.setUserId(userId);
+        userRaffleOrder.setActivityId(activityId);
+        userRaffleOrder.setActivityName(activityEntity.getActivityName());
+        userRaffleOrder.setStrategyId(activityEntity.getStrategyId());
+        userRaffleOrder.setOrderId(RandomStringUtils.randomNumeric(12));
+        userRaffleOrder.setOrderTime(currentDate);
+        userRaffleOrder.setOrderState(UserRaffleOrderStateVO.create);
+        userRaffleOrder.setEndDateTime(activityEntity.getEndDateTime());
+        return userRaffleOrder;
     }
 }

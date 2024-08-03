@@ -14,4 +14,5 @@ import org.qihua.infrastructure.persistent.po.UserAwardRecord;
 public interface IUserAwardRecordDao {
 
     void insert(UserAwardRecord userAwardRecord);
+
 }

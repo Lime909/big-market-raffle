@@ -70,12 +70,12 @@ public interface IStrategyRepository {
      * @param endTime
      * @return
      */
-    Boolean subtractionAwardStock(String cacheKey, Date endTime);
+    Boolean subtractionAwardStock(String cacheKey, Date endDateTime);
 
     /**
      * 写入奖品库存消费队列
      *
-     * @param strategyAwardStockKeyVO
+     * @param strategyAwardStockKeyVO 对象值对象
      */
     void awardStockConsumeSendQueue(StrategyAwardStockKeyVO strategyAwardStockKeyVO);
 
@@ -88,36 +88,36 @@ public interface IStrategyRepository {
     StrategyAwardStockKeyVO takeQueueValue() throws InterruptedException;
 
     /**
-     * 更新奖品消耗库存
+     * 更新奖品库存消耗
      *
-     * @param strategyId
-     * @param awardId
+     * @param strategyId 策略ID
+     * @param awardId    奖品ID
      */
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
 
     /**
      * 根据策略ID+奖品ID的唯一值组合，查询奖品信息
      *
-     * @param strategyId
-     * @param awardId
-     * @return StrategyAwardEntity
+     * @param strategyId 策略ID
+     * @param awardId    奖品ID
+     * @return 奖品信息
      */
     StrategyAwardEntity queryStrategyAwardEntity(Long strategyId, Integer awardId);
 
     /**
      * 查询策略ID
      *
-     * @param activityId
-     * @return
+     * @param activityId 活动ID
+     * @return 策略ID
      */
     Long queryStrategyIdByActivityId(Long activityId);
 
     /**
      * 查询今日抽奖次数
      *
-     * @param userId
-     * @param strategyId
-     * @return
+     * @param userId     用户ID
+     * @param strategyId 策略ID
+     * @return 用户今日参与次数
      */
     Integer queryTodayUserRaffleCount(String userId, Long strategyId);
 
@@ -145,4 +145,5 @@ public interface IStrategyRepository {
      * @return 权重规则
      */
     List<RuleWeightVO> queryAwardRuleWeight(Long strategyId);
+
 }

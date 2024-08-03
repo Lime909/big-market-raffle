@@ -59,7 +59,7 @@ public class RaffleStrategyTest {
 
     @Test
     public void test_performRaffle() throws InterruptedException {
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
                     .userId("xiaofuge")
                     .strategyId(100006L)
@@ -70,9 +70,9 @@ public class RaffleStrategyTest {
 
             log.info("请求参数：{}", JSON.toJSONString(raffleFactorEntity));
             log.info("测试结果：{}", JSON.toJSONString(raffleAwardEntity));
-
-            new CountDownLatch(1).await();
         }
+
+        new CountDownLatch(1).await();
     }
 
     @Test
@@ -106,7 +106,7 @@ public class RaffleStrategyTest {
     }
 
     @Test
-    public void test_takeQueueValue() throws InterruptedException{
+    public void test_takeQueueValue() throws InterruptedException {
         StrategyAwardStockKeyVO strategyAwardStockKeyVO = raffleStock.takeQueueValue();
         log.info("测试结果：{}", JSON.toJSONString(strategyAwardStockKeyVO));
     }

@@ -20,4 +20,5 @@ public interface IUserBehaviorRebateOrderDao {
 
     @DBRouter
     List<UserBehaviorRebateOrder> queryOrderByOutBusinessNo(UserBehaviorRebateOrder userBehaviorRebateOrderReq);
+
 }

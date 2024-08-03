@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 @Slf4j
 @Component()
 public class UpdateAwardStockJob {
+
     @Resource
     private IRaffleStock raffleStock;
 

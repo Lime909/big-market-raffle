@@ -23,7 +23,7 @@ public class RaffleFactorEntity {
     /** 策略ID */
     private Long strategyId;
     /** 结束时间 */
-    private Date endTime;
+    private Date endDateTime;
 
 }
 

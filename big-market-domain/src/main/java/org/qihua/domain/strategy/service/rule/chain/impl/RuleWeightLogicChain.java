@@ -6,6 +6,8 @@ import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
 import org.qihua.domain.strategy.service.rule.chain.AbstractLogicChain;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import org.qihua.types.common.Constants;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import java.util.*;
  */
 @Slf4j
 @Component("rule_weight")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RuleWeightLogicChain extends AbstractLogicChain {
 
     @Resource

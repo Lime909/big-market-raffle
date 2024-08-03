@@ -28,4 +28,5 @@ public class DailyBehaviorRebate {
     private Date createTime;
     /** 更改时间 */
     private Date updateTime;
+
 }

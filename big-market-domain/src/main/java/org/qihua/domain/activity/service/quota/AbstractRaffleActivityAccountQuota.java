@@ -47,13 +47,13 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
         actionChain.action(activitySkuEntity, activityEntity, activityCountEntity);
 
         /** 4.构建订单聚合对象 */
-        CreateQuotaOrderAggregate createQuotaOrderAggregate = buildOrderAggregate(skuRechargeEntity, activitySkuEntity, activityEntity, activityCountEntity);
+        CreateQuotaOrderAggregate createOrderAggregate = buildOrderAggregate(skuRechargeEntity, activitySkuEntity, activityEntity, activityCountEntity);
 
         /** 5.保存订单 */
-        doSaveOrder(createQuotaOrderAggregate);
+        doSaveOrder(createOrderAggregate);
 
         /** 6.返回单号 */
-        return createQuotaOrderAggregate.getActivityOrderEntity().getOrderId();
+        return createOrderAggregate.getActivityOrderEntity().getOrderId();
     }
 
     protected abstract void doSaveOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);

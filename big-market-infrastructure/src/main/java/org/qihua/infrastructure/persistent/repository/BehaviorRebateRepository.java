@@ -45,19 +45,20 @@ public class BehaviorRebateRepository implements IBehaviorRebateRepository {
     @Resource
     private IDBRouterStrategy dbRouter;
     @Resource
-    private EventPublisher eventPublisher;
-    @Resource
     private TransactionTemplate transactionTemplate;
+    @Resource
+    private EventPublisher eventPublisher;
+
 
     @Override
     public List<DailyBehaviorRebateVO> queryDailyBehaviorRebateConfig(BehaviorTypeVO behaviorTypeVO) {
         List<DailyBehaviorRebate> dailyBehaviorRebates = dailyBehaviorRebateDao.queryDailyBehaviorRebateByBehaviorType(behaviorTypeVO.getCode());
-        List<DailyBehaviorRebateVO> dailyBehaviorRebateVOS = new ArrayList<>();
-        for(DailyBehaviorRebate dailyBehaviorRebate : dailyBehaviorRebates) {
+        List<DailyBehaviorRebateVO> dailyBehaviorRebateVOS = new ArrayList<>(dailyBehaviorRebates.size());
+        for (DailyBehaviorRebate dailyBehaviorRebate : dailyBehaviorRebates) {
             dailyBehaviorRebateVOS.add(DailyBehaviorRebateVO.builder()
                     .behaviorType(dailyBehaviorRebate.getBehaviorType())
-                    .rebateType(dailyBehaviorRebate.getRebateType())
                     .rebateDesc(dailyBehaviorRebate.getRebateDesc())
+                    .rebateType(dailyBehaviorRebate.getRebateType())
                     .rebateConfig(dailyBehaviorRebate.getRebateConfig())
                     .build());
         }
@@ -66,48 +67,47 @@ public class BehaviorRebateRepository implements IBehaviorRebateRepository {
 
     @Override
     public void saveUserRebateRecord(String userId, List<BehaviorRebateAggregate> behaviorRebateAggregates) {
-        try{
+        try {
             dbRouter.doRouter(userId);
             transactionTemplate.execute(status -> {
-               try{
-                   for(BehaviorRebateAggregate behaviorRebateAggregate : behaviorRebateAggregates) {
-                       BehaviorRebateOrderEntity behaviorRebateOrderEntity = behaviorRebateAggregate.getBehaviorRebateOrderEntity();
+                try {
+                    for (BehaviorRebateAggregate behaviorRebateAggregate : behaviorRebateAggregates) {
+                        BehaviorRebateOrderEntity behaviorRebateOrderEntity = behaviorRebateAggregate.getBehaviorRebateOrderEntity();
+                        /** 用户行为返利对象 */
+                        UserBehaviorRebateOrder userBehaviorRebateOrder = new UserBehaviorRebateOrder();
+                        userBehaviorRebateOrder.setUserId(behaviorRebateOrderEntity.getUserId());
+                        userBehaviorRebateOrder.setOrderId(behaviorRebateOrderEntity.getOrderId());
+                        userBehaviorRebateOrder.setBehaviorType(behaviorRebateOrderEntity.getBehaviorType());
+                        userBehaviorRebateOrder.setRebateDesc(behaviorRebateOrderEntity.getRebateDesc());
+                        userBehaviorRebateOrder.setRebateType(behaviorRebateOrderEntity.getRebateType());
+                        userBehaviorRebateOrder.setRebateConfig(behaviorRebateOrderEntity.getRebateConfig());
+                        userBehaviorRebateOrder.setOutBusinessNo(behaviorRebateOrderEntity.getOutBusinessNo());
+                        userBehaviorRebateOrder.setBizId(behaviorRebateOrderEntity.getBizId());
+                        userBehaviorRebateOrderDao.insert(userBehaviorRebateOrder);
 
-                       /** 用户行为返利对象 */
-                       UserBehaviorRebateOrder userBehaviorRebateOrder = new UserBehaviorRebateOrder();
-                       userBehaviorRebateOrder.setUserId(behaviorRebateOrderEntity.getUserId());
-                       userBehaviorRebateOrder.setOrderId(behaviorRebateOrderEntity.getOrderId());
-                       userBehaviorRebateOrder.setBehaviorType(behaviorRebateOrderEntity.getBehaviorType());
-                       userBehaviorRebateOrder.setRebateDesc(behaviorRebateOrderEntity.getRebateDesc());
-                       userBehaviorRebateOrder.setRebateType(behaviorRebateOrderEntity.getRebateType());
-                       userBehaviorRebateOrder.setRebateConfig(behaviorRebateOrderEntity.getRebateConfig());
-                       userBehaviorRebateOrder.setOutBusinessNo(behaviorRebateOrderEntity.getOutBusinessNo());
-                       userBehaviorRebateOrder.setBizId(behaviorRebateOrderEntity.getBizId());
-                       userBehaviorRebateOrderDao.insert(userBehaviorRebateOrder);
-
-                       /** 任务对象 */
-                       TaskEntity taskEntity = behaviorRebateAggregate.getTaskEntity();
-                       Task task = new Task();
-                       task.setUserId(taskEntity.getUserId());
-                       task.setTopic(taskEntity.getTopic());
-                       task.setMessageId(taskEntity.getMessageId());
-                       task.setMessage(JSON.toJSONString(taskEntity.getMessage()));
-                       task.setState(taskEntity.getState().getCode());
-                       taskDao.insert(task);
-                   }
-                   return 1;
-               }catch (DuplicateKeyException e){
-                   status.setRollbackOnly();
-                   log.error("写入返利记录，唯一索引冲突 userId:{}", userId, e);
-                   throw new AppException(ResponseCode.INDEX_DUP.getCode(), ResponseCode.INDEX_DUP.getInfo());
-               }
+                        /** 任务对象 */
+                        TaskEntity taskEntity = behaviorRebateAggregate.getTaskEntity();
+                        Task task = new Task();
+                        task.setUserId(taskEntity.getUserId());
+                        task.setTopic(taskEntity.getTopic());
+                        task.setMessageId(taskEntity.getMessageId());
+                        task.setMessage(JSON.toJSONString(taskEntity.getMessage()));
+                        task.setState(taskEntity.getState().getCode());
+                        taskDao.insert(task);
+                    }
+                    return 1;
+                } catch (DuplicateKeyException e) {
+                    status.setRollbackOnly();
+                    log.error("写入返利记录，唯一索引冲突 userId:{}", userId, e);
+                    throw new AppException(ResponseCode.INDEX_DUP.getCode(), ResponseCode.INDEX_DUP.getInfo());
+                }
             });
         } finally {
             dbRouter.clear();
         }
 
         /** 同步发送MQ消息 */
-        for(BehaviorRebateAggregate behaviorRebateAggregate : behaviorRebateAggregates){
+        for (BehaviorRebateAggregate behaviorRebateAggregate : behaviorRebateAggregates) {
             TaskEntity taskEntity = behaviorRebateAggregate.getTaskEntity();
             Task task = new Task();
             task.setUserId(taskEntity.getUserId());
@@ -121,8 +121,8 @@ public class BehaviorRebateRepository implements IBehaviorRebateRepository {
                 log.error("写入返利记录，发送MQ消息失败 userId: {} topic: {}", userId, task.getTopic());
                 taskDao.updateTaskSendMessageFail(task);
             }
-
         }
+
     }
 
     @Override
@@ -133,19 +133,19 @@ public class BehaviorRebateRepository implements IBehaviorRebateRepository {
         userBehaviorRebateOrderReq.setOutBusinessNo(outBusinessNo);
 
         /** 2.查询结果 */
-        List<UserBehaviorRebateOrder> userBehaviorRebateOrderResList =userBehaviorRebateOrderDao.queryOrderByOutBusinessNo(userBehaviorRebateOrderReq);
+        List<UserBehaviorRebateOrder> userBehaviorRebateOrderResList = userBehaviorRebateOrderDao.queryOrderByOutBusinessNo(userBehaviorRebateOrderReq);
         List<BehaviorRebateOrderEntity> behaviorRebateOrderEntities = new ArrayList<>();
-        for(UserBehaviorRebateOrder userBehaviorRebateOrder : userBehaviorRebateOrderResList){
+        for (UserBehaviorRebateOrder userBehaviorRebateOrder : userBehaviorRebateOrderResList) {
             BehaviorRebateOrderEntity behaviorRebateOrderEntity = BehaviorRebateOrderEntity.builder()
-                        .userId(userBehaviorRebateOrder.getUserId())
-                        .orderId(userBehaviorRebateOrder.getOrderId())
-                        .behaviorType(userBehaviorRebateOrder.getBehaviorType())
-                        .rebateDesc(userBehaviorRebateOrder.getRebateDesc())
-                        .rebateType(userBehaviorRebateOrder.getRebateType())
-                        .rebateConfig(userBehaviorRebateOrder.getRebateConfig())
-                        .outBusinessNo(userBehaviorRebateOrder.getOutBusinessNo())
-                        .bizId(userBehaviorRebateOrder.getBizId())
-                        .build();
+                    .userId(userBehaviorRebateOrder.getUserId())
+                    .orderId(userBehaviorRebateOrder.getOrderId())
+                    .behaviorType(userBehaviorRebateOrder.getBehaviorType())
+                    .rebateDesc(userBehaviorRebateOrder.getRebateDesc())
+                    .rebateType(userBehaviorRebateOrder.getRebateType())
+                    .rebateConfig(userBehaviorRebateOrder.getRebateConfig())
+                    .outBusinessNo(userBehaviorRebateOrder.getOutBusinessNo())
+                    .bizId(userBehaviorRebateOrder.getBizId())
+                    .build();
             behaviorRebateOrderEntities.add(behaviorRebateOrderEntity);
         }
 

@@ -11,6 +11,7 @@ import java.util.Date;
  */
 @Data
 public class RuleTreeNodeLine {
+
     /** 自增ID */
     private Long id;
     /** 规则树ID */

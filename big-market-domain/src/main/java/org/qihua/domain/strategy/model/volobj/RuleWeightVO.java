@@ -11,8 +11,8 @@ import java.util.List;
  */
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class RuleWeightVO {
 
     /** 原始规则值配置 */
@@ -24,12 +24,11 @@ public class RuleWeightVO {
     /** 奖品列表 */
     private List<Award> awardList;
 
-
     @Getter
     @Builder
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class Award{
+    @NoArgsConstructor
+    public static class Award {
         private Integer awardId;
         private String awardTitle;
     }

@@ -1,5 +1,6 @@
 package org.qihua.domain.strategy.service.armory;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
@@ -29,7 +30,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
     @Resource
     private IStrategyRepository repository;
 
-    private final SecureRandom random = new SecureRandom();
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     public boolean assembleLotteryStrategyByActivityId(Long activityId) {
@@ -43,9 +44,9 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         List<StrategyAwardEntity> strategyAwardEntities = repository.queryStrategyAwardList(strategyId);
 
         // 2.缓存奖品列表【用于decr扣减库存使用】
-        for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities) {
-            Integer awardId = strategyAwardEntity.getAwardId();
-            Integer awardCount = strategyAwardEntity.getAwardCountSurplus();
+        for (StrategyAwardEntity strategyAward : strategyAwardEntities) {
+            Integer awardId = strategyAward.getAwardId();
+            Integer awardCount = strategyAward.getAwardCountSurplus();
             cacheStrategyAwardCount(strategyId, awardId, awardCount);
         }
 
@@ -65,9 +66,9 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
 
         Map<String, List<Integer>> ruleWeightValueMap = strategyRuleEntity.getRuleWeightValues();
         for (String key : ruleWeightValueMap.keySet()) {
-            List<Integer> ruleValues = ruleWeightValueMap.get(key);
+            List<Integer> ruleWeightValues = ruleWeightValueMap.get(key);
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
-            strategyAwardEntitiesClone.removeIf(entity -> !ruleValues.contains(entity.getAwardId()));
+            strategyAwardEntitiesClone.removeIf(entity -> !ruleWeightValues.contains(entity.getAwardId()));
             assembleLotteryStrategy(String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(key), strategyAwardEntitiesClone);
         }
 
@@ -89,25 +90,26 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         // 3.获取概率范围
         BigDecimal rateRange = totalAwardRate.divide(minAwardRate, 0, RoundingMode.CEILING);
         // 4.生成策略奖品概率查找表
-        List<Integer> strategySearchTables = new ArrayList<>(rateRange.intValue());
-        for (StrategyAwardEntity award : strategyAwardEntities) {
-            Integer awardId = award.getAwardId();
-            BigDecimal awardRate = award.getAwardRate();
+        List<Integer> strategyAwardSearchRateTables = new ArrayList<>();
+        for (StrategyAwardEntity strategyAward : strategyAwardEntities) {
+            Integer awardId = strategyAward.getAwardId();
+            BigDecimal awardRate = strategyAward.getAwardRate();
             // 按照概率值计算需要加到查找表的数量
-            for (int i = 0; i < rateRange.multiply(awardRate).setScale(0, RoundingMode.CEILING).intValue(); i++) {
-                strategySearchTables.add(awardId);
+            for (int i = 0; i < rateRange.multiply(awardRate.divide(minAwardRate, 0, RoundingMode.CEILING)).intValue() ; i++) {
+                strategyAwardSearchRateTables.add(awardId);
             }
         }
+        log.info("strategyAwardSearchRateTables:{}", JSON.toJSONString(strategyAwardSearchRateTables));
         // 5.对策略奖品查找表进行乱序
-        Collections.shuffle(strategySearchTables);
+        Collections.shuffle(strategyAwardSearchRateTables);
         // 6.生成Map，通过概率来获得相应的奖品id
-        Map<Integer, Integer> shuffleAwardSearchTable = new LinkedHashMap<>();
-        for (int i = 0; i < strategySearchTables.size(); i++) {
-            shuffleAwardSearchTable.put(i, strategySearchTables.get(i));
+        Map<Integer, Integer> shuffleStrategyAwardSearchRateTable = new LinkedHashMap<>();
+        for (int i = 0; i < strategyAwardSearchRateTables.size(); i++) {
+            shuffleStrategyAwardSearchRateTable.put(i, strategyAwardSearchRateTables.get(i));
         }
 
         // 7.存储进入redis
-        repository.storeStrategyAwardSearchRateTable(key, shuffleAwardSearchTable.size(), shuffleAwardSearchTable);
+        repository.storeStrategyAwardSearchRateTable(key, shuffleStrategyAwardSearchRateTable.size(), shuffleStrategyAwardSearchRateTable);
     }
 
     /**
@@ -122,18 +124,17 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         repository.cacheStrategyAwardCount(cacheKey, awardCount);
     }
 
-
     @Override
     public Integer getRandomAwardId(Long strategyId) {
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rateRange = repository.getRateRange(strategyId);
         // 通过生成的随机值，获取概率值奖品查找表的结果
-        return repository.getStrategyAwardAssemble(String.valueOf(strategyId), random.nextInt(rateRange));
+        return repository.getStrategyAwardAssemble(String.valueOf(strategyId), secureRandom.nextInt(rateRange));
     }
 
     @Override
-    public Integer getRandomAwardId(Long strategyId, String ruleWeight) {
-        String key = String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(ruleWeight);
+    public Integer getRandomAwardId(Long strategyId, String ruleWeightValue) {
+        String key = String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(ruleWeightValue);
         return getRandomAwardId(key);
     }
 
@@ -142,12 +143,13 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rateRange = repository.getRateRange(key);
         // 通过生成的随机值，获取概率值奖品查找表的结果
-        return repository.getStrategyAwardAssemble(key, random.nextInt(rateRange));
+        return repository.getStrategyAwardAssemble(key, secureRandom.nextInt(rateRange));
     }
 
     @Override
-    public Boolean subtractionAwardStock(Long strategyId, Integer awardId, Date endTime) {
+    public Boolean subtractionAwardStock(Long strategyId, Integer awardId, Date endDateTime) {
         String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY + strategyId + Constants.UNDERLINE + awardId;
-        return repository.subtractionAwardStock(cacheKey, endTime);
+        return repository.subtractionAwardStock(cacheKey, endDateTime);
     }
+
 }

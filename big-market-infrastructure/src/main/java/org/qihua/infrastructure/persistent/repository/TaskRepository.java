@@ -59,4 +59,5 @@ public class TaskRepository implements ITaskRepository {
         taskReq.setMessageId(messageId);
         taskDao.updateTaskSendMessageFail(taskReq);
     }
+
 }

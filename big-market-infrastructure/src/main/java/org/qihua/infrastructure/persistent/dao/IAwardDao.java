@@ -12,5 +12,7 @@ import java.util.List;
  */
 @Mapper
 public interface IAwardDao {
+
     List<Award> queryAwardList();
+
 }

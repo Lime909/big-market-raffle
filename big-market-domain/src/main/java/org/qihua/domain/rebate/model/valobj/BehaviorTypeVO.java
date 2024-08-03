@@ -18,4 +18,5 @@ public enum BehaviorTypeVO {
 
     private final String code;
     private final String info;
+
 }

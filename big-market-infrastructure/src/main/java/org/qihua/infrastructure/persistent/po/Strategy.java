@@ -11,6 +11,7 @@ import java.util.Date;
  */
 @Data
 public class Strategy {
+
     /** 自增ID */
     private Long id;
     /** 抽奖策略ID */

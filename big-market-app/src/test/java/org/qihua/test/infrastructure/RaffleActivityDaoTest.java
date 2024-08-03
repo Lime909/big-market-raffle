@@ -25,7 +25,7 @@ public class RaffleActivityDaoTest {
     private IRaffleActivityDao raffleActivityDao;
 
     @Test
-    public void test_queryRaffleActivityByActivityId(){
+    public void test_queryRaffleActivityByActivityId() {
         RaffleActivity raffleActivity = raffleActivityDao.queryRaffleActivityByActivityId(100301L);
         log.info("测试结果：{}", JSON.toJSONString(raffleActivity));
     }

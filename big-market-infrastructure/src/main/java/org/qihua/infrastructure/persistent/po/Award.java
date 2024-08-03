@@ -11,6 +11,7 @@ import java.util.Date;
  */
 @Data
 public class Award {
+
     /** 自增ID */
     private Long id;
     /** 抽奖奖品ID - 内部流转使用 */
@@ -25,4 +26,5 @@ public class Award {
     private Date createTime;
     /** 更新时间 */
     private Date updateTime;
+
 }

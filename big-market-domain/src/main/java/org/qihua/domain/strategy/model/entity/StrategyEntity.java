@@ -18,23 +18,29 @@ import org.qihua.types.common.Constants;
 @NoArgsConstructor
 public class StrategyEntity {
 
-    /** 抽奖策略ID */
+    /**
+     * 抽奖策略ID
+     */
     private Long strategyId;
-    /** 抽奖策略描述 */
+    /**
+     * 抽奖策略描述
+     */
     private String strategyDesc;
-    /** 抽奖规则模型*/
+    /**
+     * 抽奖规则模型
+     */
     private String ruleModels;
 
-    public String[] ruleModels(){
-        if(StringUtils.isBlank(ruleModels)) return null;
+    public String[] ruleModels() {
+        if (StringUtils.isBlank(ruleModels)) return null;
         return ruleModels.split(Constants.SPLIT);
     }
 
-    public String getRuleWeight(){
+    public String getRuleWeight() {
         String[] ruleModels = this.ruleModels();
-        if(ruleModels == null) return null;
-        for(String ruleModel : ruleModels){
-            if(ruleModel.equals("rule_weight")) return ruleModel;
+        if (ruleModels == null) return null;
+        for (String ruleModel : ruleModels) {
+            if (ruleModel.equals("rule_weight")) return ruleModel;
         }
         return null;
     }

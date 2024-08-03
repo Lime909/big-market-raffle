@@ -12,6 +12,7 @@ import java.util.Date;
  */
 @Data
 public class StrategyAward {
+
     /** 自增ID */
     private Long id;
     /** 抽奖策略ID */

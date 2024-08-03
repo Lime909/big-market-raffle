@@ -37,4 +37,5 @@ public class TaskService implements ITaskService {
     public void updateTaskSendMessageFail(String userId, String messageId) {
         taskRepository.updateTaskSendMessageFail(userId, messageId);
     }
+
 }

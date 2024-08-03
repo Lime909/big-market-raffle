@@ -18,6 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Response<T> implements Serializable {
+
     private String code;
     private String info;
     private T data;

@@ -10,23 +10,31 @@ import org.qihua.domain.activity.model.entity.SkuRechargeEntity;
  */
 public interface IRaffleActivityAccountQuotaService {
 
-
     /**
-     * 创建sku账户充值订单，给用户增加抽奖次数
+     * 创建 sku 账户充值订单，给用户增加抽奖次数
+     * <p>
+     * 1. 在【打卡、签到、分享、对话、积分兑换】等行为动作下，创建出活动订单，给用户的活动账户【日、月】充值可用的抽奖次数。
+     * 2. 对于用户可获得的抽奖次数，比如首次进来就有一次，则是依赖于运营配置的动作，在前端页面上。用户点击后，可以获得一次抽奖次数。
      *
-     * 1.在【打卡、签到、分享、对话、积分兑换】的行为下，创建出活动订单，给用户的活动账户【日、月】增加可用次数
-     * 2.对用户的抽奖次数，比如新进来就依次，前端页面上，用户点击可以获得一次抽奖机会
-     *
-     * @param skuRechargeEntity
+     * @param skuRechargeEntity 活动商品充值实体对象
      * @return 活动ID
      */
     String createOrder(SkuRechargeEntity skuRechargeEntity);
 
     /**
-     * 查询活动期间，用户抽奖的日次数
+     * 查询活动账户 - 总，参与次数
      *
-     * @param activityId
-     * @param userId
+     * @param activityId 活动ID
+     * @param userId     用户ID
+     * @return 参与次数
+     */
+    Integer queryRaffleActivityAccountPartakeCount(Long activityId, String userId);
+
+    /**
+     * 查询活动账户 - 日，参与次数
+     *
+     * @param activityId 活动ID
+     * @param userId     用户ID
      * @return 参与次数
      */
     Integer queryRaffleActivityAccountDayPartakeCount(Long activityId, String userId);
@@ -40,12 +48,4 @@ public interface IRaffleActivityAccountQuotaService {
      */
     ActivityAccountEntity queryActivityAccountEntity(Long activityId, String userId);
 
-    /**
-     * 查询活动账户 - 总，参与次数
-     *
-     * @param activityId 活动ID
-     * @param userId     用户ID
-     * @return 参与次数
-     */
-    Integer queryRaffleActivityAccountPartakeCount(Long activityId, String userId);
 }

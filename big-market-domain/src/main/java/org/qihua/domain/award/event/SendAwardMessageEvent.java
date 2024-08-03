@@ -55,4 +55,5 @@ public class SendAwardMessageEvent extends BaseEvent<SendAwardMessageEvent.SendA
          */
         private String awardTitle;
     }
+
 }

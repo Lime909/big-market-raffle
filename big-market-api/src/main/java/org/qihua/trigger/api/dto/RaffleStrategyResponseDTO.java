@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RaffleStrategyResponseDTO {
+
     /** 奖品ID */
     private Integer awardId;
     /** 奖品排序编号 */
     private Integer awardIndex;
+
 }

@@ -17,7 +17,7 @@ public enum UserRaffleOrderStateVO {
     cancel("cancel", "已作废"),
     ;
 
-    private String code;
-    private String info;
+    private final String code;
+    private final String info;
 
 }

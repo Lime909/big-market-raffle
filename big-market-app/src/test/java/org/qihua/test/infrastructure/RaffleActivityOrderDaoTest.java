@@ -31,8 +31,8 @@ public class RaffleActivityOrderDaoTest {
     private final EasyRandom easyRandom = new EasyRandom();
 
     @Test
-    public void test_insert_random(){
-        for (int i = 0; i < 50 ;i++) {
+    public void test_insert_random() {
+        for (int i = 0; i < 50; i++) {
             RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
             raffleActivityOrder.setUserId(easyRandom.nextObject(String.class));
             raffleActivityOrder.setActivityId(100301L);
@@ -47,7 +47,7 @@ public class RaffleActivityOrderDaoTest {
     }
 
     @Test
-    public void test_insert(){
+    public void test_insert() {
         RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
         raffleActivityOrder.setUserId("lime");
         raffleActivityOrder.setActivityId(100301L);

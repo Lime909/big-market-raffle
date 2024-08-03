@@ -26,7 +26,7 @@ public class RaffleActivityPartakeServiceTest {
     private IRaffleActivityPartakeService raffleActivityPartakeService;
 
     @Test
-    public void test_create_order(){
+    public void test_create_order() {
         /** 请求参数 */
         PartakeRaffleActivityEntity partakeRaffleActivityEntity = new PartakeRaffleActivityEntity();
         partakeRaffleActivityEntity.setUserId("xiaofuge");

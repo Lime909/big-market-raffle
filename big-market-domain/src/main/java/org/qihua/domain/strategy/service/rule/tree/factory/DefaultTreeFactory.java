@@ -20,14 +20,14 @@ import java.util.Map;
  */
 @Service
 public class DefaultTreeFactory {
-    private final Map<String, ILogicTreeNode> logicTreeNodeMap;
+    private final Map<String, ILogicTreeNode> logicTreeNodeGroup;
 
-    public DefaultTreeFactory(Map<String, ILogicTreeNode> logicTreeNodeMap) {
-        this.logicTreeNodeMap = logicTreeNodeMap;
+    public DefaultTreeFactory(Map<String, ILogicTreeNode> logicTreeNodeGroup) {
+        this.logicTreeNodeGroup = logicTreeNodeGroup;
     }
 
     public IDecisionTreeEngine openLogicTree(RuleTreeVO ruleTreeVO) {
-        return new DecisionTreeEngine(logicTreeNodeMap, ruleTreeVO);
+        return new DecisionTreeEngine(logicTreeNodeGroup, ruleTreeVO);
     }
 
     @Data
@@ -44,14 +44,10 @@ public class DefaultTreeFactory {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class StrategyAwardVO {
-        /**
-         * 抽奖奖品ID - 内部流转使用
-         */
+        /** 抽奖奖品ID - 内部流转使用 */
         private Integer awardId;
-        /**
-         * 抽奖奖品规则
-         */
+        /** 抽奖奖品规则 */
         private String awardRuleValue;
-
     }
+
 }

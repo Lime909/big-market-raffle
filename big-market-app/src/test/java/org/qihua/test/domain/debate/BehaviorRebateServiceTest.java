@@ -38,7 +38,7 @@ public class BehaviorRebateServiceTest {
     private IBehaviorRebateService behaviorRebateService;
 
     @Before
-    public void init(){
+    public void init() {
         activityArmory.assembleActivitySkuByActivityId(100301L);
     }
 

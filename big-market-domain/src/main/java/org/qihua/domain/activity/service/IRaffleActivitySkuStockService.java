@@ -23,16 +23,16 @@ public interface IRaffleActivitySkuStockService {
     void clearQueueValue();
 
     /**
-     * 延迟队列+任务趋势更新活动sku库存
+     * 延迟队列 + 任务趋势更新活动sku库存
      *
-     * @param sku
+     * @param sku 活动商品
      */
     void updateActivitySkuStock(Long sku);
 
     /**
-     * 延迟库存以消耗完毕，清空数据库库存
+     * 缓存库存以消耗完毕，清空数据库库存
      *
-     * @param sku
+     * @param sku 活动商品
      */
     void clearActivitySkuStock(Long sku);
 

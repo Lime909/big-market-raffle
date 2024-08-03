@@ -17,16 +17,14 @@ public class RaffleStrategyRuleWeightResponseDTO {
     /** 用户在一个活动下完成的总抽奖次数 */
     private Integer userActivityAccountTotalUseCount;
     /** 当前权重可抽奖范围 */
-    private List<?> strategyAwards;
+    private List<StrategyAward> strategyAwards;
 
     @Data
-    public static class StrategyAward{
-
+    public static class StrategyAward {
         /** 奖品ID */
         private Integer awardId;
         /** 奖品标题 */
         private String awardTitle;
-
     }
 
 }

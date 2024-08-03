@@ -13,17 +13,19 @@ public interface IRaffleActivityPartakeService {
     /**
      * 创建抽奖单：用户参与抽奖活动，扣减活动账户库存，产生抽奖单，如果存在未使用的抽奖单就直接返回已存在的抽奖单。
      *
-     * @param partakeRaffleActivityEntity
-     * @return 抽奖订单对象
-     */
-    UserRaffleOrderEntity createOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity);
-
-    /**
-     * 创建抽奖单：用户参与抽奖活动，扣减活动账户库存，产生抽奖单，如果存在未使用的抽奖单就直接返回已存在的抽奖单。
-     *
      * @param userId
      * @param activityId
      * @return 抽奖订单对象
      */
     UserRaffleOrderEntity createOrder(String userId, Long activityId);
+
+    /**
+     * 创建抽奖单：用户参与抽奖活动，扣减活动账户库存，产生抽奖单，如果存在未使用的抽奖单就直接返回已存在的抽奖单。
+     *
+     * @param partakeRaffleActivityEntity
+     * @return 抽奖订单对象
+     */
+    UserRaffleOrderEntity createOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity);
+
+
 }

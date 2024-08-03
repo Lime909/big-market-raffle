@@ -24,7 +24,7 @@ public class SendRebateMessageEvent extends BaseEvent<SendRebateMessageEvent.Reb
 
     @Override
     public EventMessage<RebateMessage> buildEventMessage(RebateMessage data) {
-        return EventMessage.<RebateMessage>builder()
+        return EventMessage.<SendRebateMessageEvent.RebateMessage>builder()
                 .id(RandomStringUtils.randomNumeric(11))
                 .timestamp(new Date())
                 .data(data)
@@ -52,4 +52,5 @@ public class SendRebateMessageEvent extends BaseEvent<SendRebateMessageEvent.Reb
         /** 业务ID - 拼接的唯一值 */
         private String bizId;
     }
+
 }

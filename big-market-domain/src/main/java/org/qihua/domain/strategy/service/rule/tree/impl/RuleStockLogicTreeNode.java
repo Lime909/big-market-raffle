@@ -27,10 +27,10 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue, Date endTime) {
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue, Date endDateTime) {
         log.info("规则过滤-库存扣减 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
         /** 扣减库存 */
-        Boolean status = strategyDispatch.subtractionAwardStock(strategyId, awardId, endTime);
+        Boolean status = strategyDispatch.subtractionAwardStock(strategyId, awardId, endDateTime);
         /** 扣减成功 */
         if (status) {
             log.info("规则过滤-库存扣减-成功 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
@@ -56,4 +56,5 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
                 .ruleLogicCheckType(RuleLogicCheckTypeVO.ALLOW)
                 .build();
     }
+
 }

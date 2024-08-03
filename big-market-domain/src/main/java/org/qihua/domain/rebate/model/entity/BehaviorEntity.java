@@ -23,4 +23,5 @@ public class BehaviorEntity {
     private BehaviorTypeVO behaviorTypeVO;
     /** 业务ID 签到-日期字符串 支付-订单号 */
     private String outBusinessNo;
+
 }

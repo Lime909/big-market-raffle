@@ -36,9 +36,9 @@ public class AwardRepository implements IAwardRepository {
     @Resource
     private ITaskDao taskDao;
     @Resource
-    private IUserRaffleOrderDao userRaffleOrderDao;
-    @Resource
     private IUserAwardRecordDao userAwardRecordDao;
+    @Resource
+    private IUserRaffleOrderDao userRaffleOrderDao;
     @Resource
     private IDBRouterStrategy dbRouter;
     @Resource
@@ -48,6 +48,7 @@ public class AwardRepository implements IAwardRepository {
 
     @Override
     public void saveUserAwardRecord(UserAwardRecordAggregate userAwardRecordAggregate) {
+
         UserAwardRecordEntity userAwardRecordEntity = userAwardRecordAggregate.getUserAwardRecordEntity();
         TaskEntity taskEntity = userAwardRecordAggregate.getTaskEntity();
         String userId = userAwardRecordEntity.getUserId();
@@ -103,11 +104,11 @@ public class AwardRepository implements IAwardRepository {
 
         try {
             /** 发送信息【在事务外执行，失败了也能有任务补偿】*/
-            eventPublisher.publish(taskEntity.getTopic(), task.getMessage());
+            eventPublisher.publish(task.getTopic(), task.getMessage());
             /** 更新数据库记录，task任务表 */
             taskDao.updateTaskSendMessageCompleted(task);
         } catch (Exception e) {
-            log.error("写入中奖记录，发送MQ消息失败 userId:{} topic:{}", userId, taskEntity.getTopic());
+            log.error("写入中奖记录，发送MQ消息失败 userId:{} topic:{}", userId, task.getTopic());
             taskDao.updateTaskSendMessageFail(task);
         }
     }

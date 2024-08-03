@@ -1,9 +1,6 @@
 package org.qihua.domain.activity.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @Author：Lime
@@ -11,9 +8,6 @@ import lombok.NoArgsConstructor;
  * @Date：2024/7/3 17:28
  */
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class SkuRechargeEntity {
 
     /** 用户ID */

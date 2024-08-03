@@ -38,13 +38,13 @@ public class RaffleActivityControllerTest {
     @Test
     public void test_draw() {
         for (int i = 0; i < 1; i++) {
-            ActivityDrawRequestDTO requestDTO = new ActivityDrawRequestDTO();
-            requestDTO.setActivityId(100301L);
-            requestDTO.setUserId("xiaofuge");
-            Response<ActivityDrawResponseDTO> responseDTO = raffleActivityService.draw(requestDTO);
+            ActivityDrawRequestDTO request = new ActivityDrawRequestDTO();
+            request.setActivityId(100301L);
+            request.setUserId("xiaofuge");
+            Response<ActivityDrawResponseDTO> response = raffleActivityService.draw(request);
 
-            log.info("请求参数：{}", JSON.toJSONString(requestDTO));
-            log.info("抽奖结果：{}", JSON.toJSONString(responseDTO));
+            log.info("请求参数：{}", JSON.toJSONString(request));
+            log.info("测试结果：{}", JSON.toJSONString(response));
         }
     }
 

@@ -22,4 +22,5 @@ public interface IRaffleActivityOrderDao {
 
     @DBRouter
     List<RaffleActivityOrder> queryRaffleActivityOrderByUserId(String userId);
+
 }

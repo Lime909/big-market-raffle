@@ -32,11 +32,17 @@ import static org.qihua.types.enums.ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY;
 public class StrategyRepository implements IStrategyRepository {
 
     @Resource
+    private IRaffleActivityDao raffleActivityDao;
+    @Resource
     private IStrategyDao strategyDao;
     @Resource
     private IStrategyRuleDao strategyRuleDao;
     @Resource
     private IStrategyAwardDao strategyAwardDao;
+    @Resource
+    private IRaffleActivityAccountDao raffleActivityAccountDao;
+    @Resource
+    private IRaffleActivityAccountDayDao raffleActivityAccountDayDao;
     @Resource
     private IRedisService redisService;
     @Resource
@@ -45,12 +51,6 @@ public class StrategyRepository implements IStrategyRepository {
     private IRuleTreeNodeDao ruleTreeNodeDao;
     @Resource
     private IRuleTreeNodeLineDao ruleTreeNodeLineDao;
-    @Resource
-    private IRaffleActivityDao raffleActivityDao;
-    @Resource
-    private IRaffleActivityAccountDao raffleActivityAccountDao;
-    @Resource
-    private IRaffleActivityAccountDayDao raffleActivityAccountDayDao;
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -89,12 +89,12 @@ public class StrategyRepository implements IStrategyRepository {
      * 简单来说，getMap 方法返回的 RMap 对象是懒加载的，只有在你实际进行操作时，Redis 数据库中的数据结构才会被创建或修改。
      */
     @Override
-    public void storeStrategyAwardSearchRateTable(String key, Integer rateRange, Map<Integer, Integer> strategyAwardSearchTable) {
+    public void storeStrategyAwardSearchRateTable(String key, Integer rateRange, Map<Integer, Integer> strategyAwardSearchRateTable) {
         // 1.存储抽奖策略范围值
         redisService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + key, rateRange);
         // 2.存储概率查找表
         Map<Integer, Integer> cacheRateTable = redisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + key);
-        cacheRateTable.putAll(strategyAwardSearchTable);
+        cacheRateTable.putAll(strategyAwardSearchRateTable);
     }
 
     @Override
@@ -152,7 +152,6 @@ public class StrategyRepository implements IStrategyRepository {
                 .ruleValue(strategyRuleRes.getRuleValue())
                 .ruleDesc(strategyRuleRes.getRuleDesc())
                 .build();
-
     }
 
     @Override
@@ -246,7 +245,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public Boolean subtractionAwardStock(String cacheKey, Date endTime) {
+    public Boolean subtractionAwardStock(String cacheKey, Date endDateTime) {
         long surplus = redisService.decr(cacheKey);
         if (surplus < 0) {
             /** 库存小于0，恢复为0 */
@@ -260,8 +259,8 @@ public class StrategyRepository implements IStrategyRepository {
         String lockKey = cacheKey + Constants.UNDERLINE + surplus;
         /** SET IF NOT EXISTS*/
         Boolean lock = false;
-        if (endTime != null) {
-            long expireMillis = endTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+        if (endDateTime != null) {
+            long expireMillis = endDateTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
             lock = redisService.setNx(lockKey, expireMillis, TimeUnit.MILLISECONDS);
         } else {
             lock = redisService.setNx(lockKey);
@@ -353,9 +352,9 @@ public class StrategyRepository implements IStrategyRepository {
         }
         List<RuleTreeNode> ruleTreeNodes = ruleTreeNodeDao.queryRuleLocks(treeIds);
         Map<String, Integer> resultMap = new HashMap<>();
-        for (RuleTreeNode ruleTreeNode : ruleTreeNodes) {
-            String treeId = ruleTreeNode.getTreeId();
-            Integer ruleValue = Integer.valueOf(ruleTreeNode.getRuleValue());
+        for (RuleTreeNode node : ruleTreeNodes) {
+            String treeId = node.getTreeId();
+            Integer ruleValue = Integer.valueOf(node.getRuleValue());
             resultMap.put(treeId, ruleValue);
         }
         return resultMap;
@@ -375,11 +374,12 @@ public class StrategyRepository implements IStrategyRepository {
     public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
         /** 优先从缓存获取 */
         String cacheKey = Constants.RedisKey.STRATEGY_RULE_WEIGHT_KEY + strategyId;
-        List<RuleWeightVO> ruleWeightVOList = redisService.getValue(cacheKey);
-        if (ruleWeightVOList != null) {
-            return ruleWeightVOList;
+        List<RuleWeightVO> ruleWeightVOS = redisService.getValue(cacheKey);
+        if (ruleWeightVOS != null) {
+            return ruleWeightVOS;
         }
 
+        ruleWeightVOS = new ArrayList<>();
         /** 1.查询权重规则配置 */
         StrategyRule strategyRuleReq = new StrategyRule();
         strategyRuleReq.setStrategyId(strategyId);
@@ -408,7 +408,7 @@ public class StrategyRepository implements IStrategyRepository {
                         .build());
             }
 
-            ruleWeightVOList.add(RuleWeightVO.builder()
+            ruleWeightVOS.add(RuleWeightVO.builder()
                     .ruleValue(ruleValue)
                     .weight(Integer.valueOf(ruleWeightKey.split(Constants.COLON)[0]))
                     .awardIds(awardIds)
@@ -416,9 +416,9 @@ public class StrategyRepository implements IStrategyRepository {
                     .build());
         }
 
-        redisService.setValue(cacheKey, ruleWeightVOList);
+        redisService.setValue(cacheKey, ruleWeightVOS);
 
-        return ruleWeightVOList;
+        return ruleWeightVOS;
     }
 
 }
