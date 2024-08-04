@@ -1,6 +1,7 @@
 package org.qihua.domain.award.service;
 
 import org.qihua.domain.award.model.aggregate.UserAwardRecordAggregate;
+import org.qihua.domain.award.model.entity.DistributeAwardEntity;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 
 /**
@@ -11,5 +12,11 @@ import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 public interface IAwardService {
 
     void saveUserAwardRecord(UserAwardRecordEntity userAwardRecordEntity);
+
+    /**
+     * 配送发货奖品
+     * @param distributeAwardEntity
+     */
+    void distributeAward(DistributeAwardEntity distributeAwardEntity);
 
 }

@@ -99,7 +99,6 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
                 strategyAwardSearchRateTables.add(awardId);
             }
         }
-        log.info("strategyAwardSearchRateTables:{}", JSON.toJSONString(strategyAwardSearchRateTables));
         // 5.对策略奖品查找表进行乱序
         Collections.shuffle(strategyAwardSearchRateTables);
         // 6.生成Map，通过概率来获得相应的奖品id
