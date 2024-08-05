@@ -26,7 +26,8 @@ public class Constants {
         public static String ACTIVITY_SKU_COUNT_CLEAR_KEY = "activity_sku_count_clear_key_";
         public static String AWARD_KEY_KEY = "award_key_key_";
         public static String AWARD_CONFIG_KEY = "award_config_key_";
-
+        public static String ACTIVITY_ACCOUNT_LOCK_KEY = "activity_account_lock_key_";
+        public static String USER_CREDIT_ACCOUNT_KEY = "user_credit_account_key_";
     }
 
 }

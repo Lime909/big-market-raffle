@@ -19,6 +19,12 @@
         where user_id = #{userId}
     </update>
 
+    <select id="queryUserCreditAccount" parameterType="org.qihua.infrastructure.persistent.po.UserCreditAccount" resultMap="dataMap">
+        select user_id, total_amount, available_amount, account_status
+        from user_credit_account
+        where user_id = #{userId}
+    </select>
+
     <insert id="insert" parameterType="org.qihua.infrastructure.persistent.po.UserCreditAccount">
         insert into user_credit_account(user_id, total_amount, available_amount, account_status, create_time,
                                         update_time)

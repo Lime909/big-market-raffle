@@ -21,11 +21,13 @@ import org.qihua.infrastructure.persistent.redis.IRedisService;
 import org.qihua.types.common.Constants;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
+import org.redisson.api.RLock;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author：Lime
@@ -152,15 +154,18 @@ public class AwardRepository implements IAwardRepository {
         userCreditAccountReq.setAvailableAmount(userCreditAwardEntity.getCreditAmount());
         userCreditAccountReq.setAccountStatus(AccountStatusVO.open.getCode());
 
+        RLock lock = redisService.getLock(Constants.RedisKey.ACTIVITY_ACCOUNT_LOCK_KEY + userId);
         try{
+            lock.lock(3, TimeUnit.SECONDS);
             dbRouter.doRouter(userId);
             transactionTemplate.execute(status -> {
                 try{
-                    /** 更新发奖记录「存在就更新」*/
-                    int updateAccount = userCreditAccountDao.updateAddAmount(userCreditAccountReq);
-                    if(updateAccount == 0){
-                        /** 更新用户积分「首次就插入」*/
+                    /** 更新发奖记录「存在就更新」「首次就插入」*/
+                    UserCreditAccount userCreditAccountRes = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
+                    if (userCreditAccountRes == null) {
                         userCreditAccountDao.insert(userCreditAccountReq);
+                    } else {
+                        userCreditAccountDao.updateAddAmount(userCreditAccountReq);
                     }
 
                     /** 更新奖品记录「发奖完成」*/
@@ -179,6 +184,7 @@ public class AwardRepository implements IAwardRepository {
             });
         }finally {
             dbRouter.clear();
+            lock.unlock();
         }
     }
 
