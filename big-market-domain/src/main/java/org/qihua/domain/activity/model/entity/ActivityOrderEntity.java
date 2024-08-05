@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.qihua.domain.activity.model.valobj.OrderStateVO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -39,6 +40,8 @@ public class ActivityOrderEntity {
     private Integer dayCount;
     /** 月次数 */
     private Integer monthCount;
+    /** 支付金额 */
+    private BigDecimal payAmount;
     /** 订单状态 */
     private OrderStateVO state;
     /** 防重复的ID，确保幂等 */

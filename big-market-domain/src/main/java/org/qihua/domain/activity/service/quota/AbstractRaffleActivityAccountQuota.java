@@ -6,10 +6,13 @@ import org.qihua.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import org.qihua.domain.activity.model.entity.*;
 import org.qihua.domain.activity.repository.IActivityRepository;
 import org.qihua.domain.activity.service.IRaffleActivityAccountQuotaService;
+import org.qihua.domain.activity.service.quota.policy.ITradePolicy;
 import org.qihua.domain.activity.service.quota.rule.IActionChain;
 import org.qihua.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.exception.AppException;
+
+import java.util.Map;
 
 /**
  * @Author：Lime
@@ -19,9 +22,12 @@ import org.qihua.types.exception.AppException;
 @Slf4j
 public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityAccountQuotaSupport implements IRaffleActivityAccountQuotaService {
 
+    private final Map<String, ITradePolicy> tradePolicyMap;
 
-    public AbstractRaffleActivityAccountQuota(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public AbstractRaffleActivityAccountQuota(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory,
+                                              Map<String, ITradePolicy> tradePolicyMap) {
         super(activityRepository, defaultActivityChainFactory);
+        this.tradePolicyMap = tradePolicyMap;
     }
 
     @Override
@@ -42,21 +48,20 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
         /** 2.3.查询次数信息 */
         ActivityCountEntity activityCountEntity = queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
 
-        /** 3.活动动作规则校验 */
+        /** 3.活动动作规则校验 「过滤失败则直接抛异常」- 责任链扣减sku库存*/
         IActionChain actionChain = defaultActivityChainFactory.openActionChain();
         actionChain.action(activitySkuEntity, activityEntity, activityCountEntity);
 
         /** 4.构建订单聚合对象 */
         CreateQuotaOrderAggregate createOrderAggregate = buildOrderAggregate(skuRechargeEntity, activitySkuEntity, activityEntity, activityCountEntity);
 
-        /** 5.保存订单 */
-        doSaveOrder(createOrderAggregate);
+        /** 5.交易策略 - 【积分兑换，支付类订单】【返利无支付交易订单，直接充值到账】【订单状态变更交易类型策略】 */
+        ITradePolicy tradePolicy = tradePolicyMap.get(skuRechargeEntity.getOrderTradeType().getCode());
+        tradePolicy.trade(createOrderAggregate);
 
         /** 6.返回单号 */
         return createOrderAggregate.getActivityOrderEntity().getOrderId();
     }
-
-    protected abstract void doSaveOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
 
     protected abstract CreateQuotaOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity);
 }

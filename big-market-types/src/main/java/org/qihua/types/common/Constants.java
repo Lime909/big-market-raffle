@@ -28,6 +28,7 @@ public class Constants {
         public static String AWARD_CONFIG_KEY = "award_config_key_";
         public static String ACTIVITY_ACCOUNT_LOCK_KEY = "activity_account_lock_key_";
         public static String USER_CREDIT_ACCOUNT_KEY = "user_credit_account_key_";
+        public static String ACTIVITY_ACCOUNT_UPDATE_KEY = "activity_account_update_key_";
     }
 
 }

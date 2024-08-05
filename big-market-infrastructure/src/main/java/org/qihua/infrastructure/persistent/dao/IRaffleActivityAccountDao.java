@@ -3,6 +3,7 @@ package org.qihua.infrastructure.persistent.dao;
 import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import org.apache.ibatis.annotations.Mapper;
 import org.qihua.infrastructure.persistent.po.RaffleActivityAccount;
+import org.qihua.infrastructure.persistent.po.RaffleActivityOrder;
 
 /**
  * @Author：Lime
@@ -31,4 +32,5 @@ public interface IRaffleActivityAccountDao {
 
     RaffleActivityAccount queryAccountByUserId(RaffleActivityAccount raffleActivityAccount);
 
+    int updateOrderCompleted(RaffleActivityOrder raffleActivityOrderReq);
 }

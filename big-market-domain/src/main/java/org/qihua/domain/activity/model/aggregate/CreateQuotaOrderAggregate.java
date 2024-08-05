@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.qihua.domain.activity.model.entity.ActivityOrderEntity;
+import org.qihua.domain.activity.model.valobj.OrderStateVO;
 
 /**
  * @Author：Lime
@@ -30,5 +31,9 @@ public class CreateQuotaOrderAggregate {
     private Integer monthCount;
     /** 活动订单实体 */
     private ActivityOrderEntity activityOrderEntity;
+
+    public void setOrderState(OrderStateVO orderState) {
+        this.activityOrderEntity.setState(orderState);
+    }
 
 }
