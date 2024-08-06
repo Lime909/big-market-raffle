@@ -4,6 +4,8 @@ import org.qihua.domain.award.model.aggregate.UserAwardRecordAggregate;
 import org.qihua.domain.award.model.entity.DistributeAwardEntity;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 
+import java.util.List;
+
 /**
  * @Author：Lime
  * @Description: 奖品服务接口
@@ -18,4 +20,5 @@ public interface IAwardService {
      */
     void distributeAward(DistributeAwardEntity distributeAwardEntity);
 
+    List<UserAwardRecordEntity> queryUserAwardRecord(String userId);
 }

@@ -52,6 +52,7 @@ import java.util.List;
 public class RaffleActivityController implements IRaffleActivityService {
 
     private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyyMMdd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     @Resource
     private IRaffleActivityPartakeService raffleActivityPartakeService;
@@ -304,7 +305,6 @@ public class RaffleActivityController implements IRaffleActivityService {
     }
 
 
-
     @RequestMapping(value = "query_sku_product_list_by_activity_id", method = RequestMethod.POST)
     @Override
     public Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(Long activityId) {
@@ -403,7 +403,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .data(true)
                     .build();
         } catch (AppException e) {
-            log.error("积分兑换商品失败 userId:{} activityId:{}",  request.getUserId(), request.getSku(), e);
+            log.error("积分兑换商品失败 userId:{} activityId:{}", request.getUserId(), request.getSku(), e);
             return Response.<Boolean>builder()
                     .code(e.getCode())
                     .info(e.getInfo())
@@ -417,4 +417,36 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .build();
         }
     }
+
+    @RequestMapping(value = "query_user_award_record", method = RequestMethod.POST)
+    @Override
+    public Response<List<UserAwardRecordResponseDTO>> queryUserAwardRecord(String userId) {
+        try {
+            log.info("查询用户获奖记录 开始 userId:{}", userId);
+            List<UserAwardRecordEntity> userAwardRecordEntities = awardService.queryUserAwardRecord(userId);
+            List<UserAwardRecordResponseDTO> userAwardRecordResponseDTOS = new ArrayList<>();
+            for (UserAwardRecordEntity userAwardRecordEntity : userAwardRecordEntities) {
+                UserAwardRecordResponseDTO responseDTO = new UserAwardRecordResponseDTO();
+                responseDTO.setUserId(userAwardRecordEntity.getUserId());
+                responseDTO.setAwardId(userAwardRecordEntity.getAwardId());
+                responseDTO.setAwardTitle(userAwardRecordEntity.getAwardTitle());
+                responseDTO.setAwardTime(dateFormat.format(userAwardRecordEntity.getAwardTime()));
+                userAwardRecordResponseDTOS.add(responseDTO);
+            }
+            log.info("查询用户获奖记录 完成 userId:{} response:{}", userId, JSON.toJSONString(userAwardRecordResponseDTOS));
+            return Response.<List<UserAwardRecordResponseDTO>>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(userAwardRecordResponseDTOS)
+                    .build();
+        } catch (Exception e) {
+            log.error("查询用户获奖记录 失败 userId:{}", userId, e);
+            return Response.<List<UserAwardRecordResponseDTO>>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+
 }

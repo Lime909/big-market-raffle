@@ -10,6 +10,7 @@ import org.qihua.domain.award.model.entity.TaskEntity;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 import org.qihua.domain.award.model.entity.UserCreditAwardEntity;
 import org.qihua.domain.award.model.valobj.AccountStatusVO;
+import org.qihua.domain.award.model.valobj.AwardStateVO;
 import org.qihua.domain.award.repository.IAwardRepository;
 import org.qihua.infrastructure.event.EventPublisher;
 import org.qihua.infrastructure.persistent.dao.*;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -198,6 +201,28 @@ public class AwardRepository implements IAwardRepository {
         awardKey = awardDao.queryAwardKeyByAwardId(awardId);
         redisService.setValue(cacheKey, awardKey);
         return awardKey;
+    }
+
+    @Override
+    public List<UserAwardRecordEntity> queryUserAwardRecord(String userId) {
+        try {
+            dbRouter.doRouter(userId);
+            List<UserAwardRecord> userAwardRecords = userAwardRecordDao.queryUserAwardRecord(userId);
+            List<UserAwardRecordEntity> userAwardRecordEntities = new ArrayList<>();
+            for (UserAwardRecord userAwardRecord : userAwardRecords) {
+                UserAwardRecordEntity userAwardRecordEntity = new UserAwardRecordEntity();
+                userAwardRecordEntity.setUserId(userAwardRecord.getUserId());
+                userAwardRecordEntity.setOrderId(userAwardRecord.getOrderId());
+                userAwardRecordEntity.setAwardId(userAwardRecord.getAwardId());
+                userAwardRecordEntity.setAwardTitle(userAwardRecord.getAwardTitle());
+                userAwardRecordEntity.setAwardTime(userAwardRecord.getAwardTime());
+                userAwardRecordEntities.add(userAwardRecordEntity);
+            }
+            return userAwardRecordEntities;
+        } finally {
+            dbRouter.clear();
+        }
+
     }
 
 }

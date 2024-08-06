@@ -4,6 +4,8 @@ import org.qihua.domain.award.model.aggregate.GiveOutPrizesAggregate;
 import org.qihua.domain.award.model.aggregate.UserAwardRecordAggregate;
 import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 
+import java.util.List;
+
 /**
  * @Author：Lime
  * @Description: 奖品仓储服务
@@ -19,4 +21,5 @@ public interface IAwardRepository {
 
     String queryAwardKey(Integer awardId);
 
+    List<UserAwardRecordEntity> queryUserAwardRecord(String userId);
 }

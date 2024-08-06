@@ -2,7 +2,10 @@ package org.qihua.infrastructure.persistent.dao;
 
 import cn.bugstack.middleware.db.router.annotation.DBRouterStrategy;
 import org.apache.ibatis.annotations.Mapper;
+import org.qihua.domain.award.model.entity.UserAwardRecordEntity;
 import org.qihua.infrastructure.persistent.po.UserAwardRecord;
+
+import java.util.List;
 
 /**
  * @Author：Lime
@@ -17,4 +20,5 @@ public interface IUserAwardRecordDao {
 
     int updateAwardRecordCompletedState(UserAwardRecord userAwardRecordReq);
 
+    List<UserAwardRecord> queryUserAwardRecord(String userId);
 }

@@ -13,6 +13,7 @@ import org.qihua.types.event.BaseEvent;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,6 +84,11 @@ public class AwardService implements IAwardService {
 
         /** 发送奖品 */
         distributeAward.giveOutPrizes(distributeAwardEntity);
+    }
+
+    @Override
+    public List<UserAwardRecordEntity> queryUserAwardRecord(String userId) {
+        return awardRepository.queryUserAwardRecord(userId);
     }
 
 }
