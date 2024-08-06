@@ -1,4 +1,4 @@
-package org.qihua.domain.activity.service.quota.rule;
+package org.qihua.domain.activity.service.quota.product;
 
 import org.qihua.domain.activity.model.entity.SkuProductEntity;
 import org.qihua.domain.activity.repository.IActivityRepository;
@@ -6,7 +6,6 @@ import org.qihua.domain.activity.service.IRaffleActivitySkuProductService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,10 +17,10 @@ import java.util.List;
 public class RaffleActivitySkuProductService implements IRaffleActivitySkuProductService {
 
     @Resource
-    private IActivityRepository activityRepository;
+    private IActivityRepository repository;
 
     @Override
-    public List<SkuProductEntity> querySkuProductByActivityId(Long activityId) {
-        return activityRepository.querySkuProductEntityListByActivityId(activityId);
+    public List<SkuProductEntity> querySkuProductEntityListByActivityId(Long activityId) {
+        return repository.querySkuProductEntityListByActivityId(activityId);
     }
 }

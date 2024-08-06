@@ -11,7 +11,6 @@ import org.qihua.domain.credit.model.valobj.TradeNameVO;
 import org.qihua.domain.credit.model.valobj.TradeTypeVO;
 import org.qihua.domain.credit.service.ICreditAdjustService;
 import org.qihua.domain.rebate.event.SendRebateMessageEvent;
-import org.qihua.domain.rebate.model.valobj.RebateTypeVO;
 import org.qihua.types.enums.ResponseCode;
 import org.qihua.types.event.BaseEvent;
 import org.qihua.types.exception.AppException;
@@ -25,7 +24,7 @@ import java.math.BigDecimal;
 
 /**
  * @Author: Lime
- * @Description: 监听：行为返利消息
+ * @Description: 监听；行为返利消息
  * @Date: 2024/7/30 21:09
  */
 @Slf4j
@@ -42,11 +41,10 @@ public class RebateMessageCustomer {
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_rebate}"))
     public void listener(String message) {
         try {
-            log.info("监听用户行为返利消息 topic:{} message:{}", topic, message);
+            log.info("监听用户行为返利消息 topic: {} message: {}", topic, message);
             /** 1.转换对象 */
             BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage>>() {
             }.getType());
-
             SendRebateMessageEvent.RebateMessage rebateMessage = eventMessage.getData();
 
             /** 2.入账奖励 */
@@ -64,7 +62,7 @@ public class RebateMessageCustomer {
                     tradeEntity.setUserId(rebateMessage.getUserId());
                     tradeEntity.setTradeName(TradeNameVO.REBATE);
                     tradeEntity.setTradeType(TradeTypeVO.FORWARD);
-                    tradeEntity.setTradeAmount(new BigDecimal(rebateMessage.getRebateConfig()));
+                    tradeEntity.setAmount(new BigDecimal(rebateMessage.getRebateConfig()));
                     tradeEntity.setOutBusinessNo(rebateMessage.getBizId());
                     creditAdjustService.createOrder(tradeEntity);
                     break;
@@ -76,7 +74,7 @@ public class RebateMessageCustomer {
             }
             throw e;
         } catch (Exception e) {
-            log.error("监听用户行为返利消息，消费失败 topic:{} message:{}", topic, message, e);
+            log.error("监听用户行为返利消息，消费失败 topic: {} message: {}", topic, message, e);
             throw e;
         }
     }

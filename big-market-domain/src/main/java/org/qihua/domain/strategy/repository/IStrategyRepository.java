@@ -3,10 +3,10 @@ package org.qihua.domain.strategy.repository;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.model.entity.StrategyRuleEntity;
-import org.qihua.domain.strategy.model.volobj.RuleTreeVO;
-import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.model.valobj.RuleTreeVO;
+import org.qihua.domain.strategy.model.valobj.RuleWeightVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
 import java.util.Date;
 import java.util.List;
@@ -67,7 +67,7 @@ public interface IStrategyRepository {
      * 缓存key，decr扣减库存
      *
      * @param cacheKey
-     * @param endTime
+     * @param endDateTime 活动结束时间
      * @return
      */
     Boolean subtractionAwardStock(String cacheKey, Date endDateTime);

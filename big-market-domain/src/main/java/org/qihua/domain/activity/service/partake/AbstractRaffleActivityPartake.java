@@ -42,23 +42,25 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         String userId = partakeRaffleActivityEntity.getUserId();
         Long activityId = partakeRaffleActivityEntity.getActivityId();
         Date currentDate = new Date();
-
-        /** 2.活动查询 */
+        log.info("创建活动抽奖单开始 userId:{} activityId:{}", userId, activityId);
+        // 1. 活动查询
         ActivityEntity activityEntity = activityRepository.queryRaffleActivityByActivityId(activityId);
 
         /** 校验活动状态 */
         if (!activityEntity.getState().equals(ActivityStateVO.open)) {
+            log.error("创建活动抽奖单失败，活动状态未开启 activityId:{} state:{}", activityId, activityEntity.getState());
             throw new AppException(ResponseCode.ACTIVITY_STATE_ERROR.getCode(), ResponseCode.ACTIVITY_STATE_ERROR.getInfo());
         }
         /** 校验活动日期 */
         if (activityEntity.getBeginDateTime().after(currentDate) || activityEntity.getEndDateTime().before(currentDate)) {
+            log.error("创建活动抽奖单失败，活动时间未开始 activityId:{} state:{}", activityId, activityEntity.getState());
             throw new AppException(ResponseCode.ACTIVITY_DATE_ERROR.getCode(), ResponseCode.ACTIVITY_DATE_ERROR.getInfo());
         }
 
         /** 2.查询未被使用的订单参与记录 */
         UserRaffleOrderEntity userRaffleOrderEntity = activityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
         if (userRaffleOrderEntity != null) {
-            log.info("创建参与活动订单 userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
+            log.info("创建参与活动订单存在 userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
             return userRaffleOrderEntity;
         }
 
@@ -73,7 +75,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
 
         /** 6.保存聚合对象 */
         activityRepository.saveCreatePartakeOrderAggregate(createPartakeOrderAggregate);
-
+        log.info("创建活动抽奖单完成 userId:{} activityId:{} orderId:{}", userId, activityId, userRaffleOrder.getOrderId());
         /** 7.返回订单信息 */
         return userRaffleOrder;
     }

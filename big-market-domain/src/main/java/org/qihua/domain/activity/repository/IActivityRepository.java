@@ -8,6 +8,8 @@ import org.qihua.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 import java.util.Date;
 import java.util.List;
 
+import java.math.BigDecimal;
+
 /**
  * @Author：Lime
  * @Description: 活动仓储接口
@@ -62,4 +64,7 @@ public interface IActivityRepository {
     UnpaidActivityOrderEntity queryUnpaidActivityOrder(SkuRechargeEntity skuRechargeEntity);
 
     List<SkuProductEntity> querySkuProductEntityListByActivityId(Long activityId);
+
+    BigDecimal queryUserCreditAccountAmount(String userId);
+
 }

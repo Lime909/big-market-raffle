@@ -13,7 +13,7 @@ import lombok.Getter;
 public enum AccountStatusVO {
 
     open("open", "开启"),
-    close("close", "关闭"),
+    close("close", "冻结"),
     ;
     private final String code;
     private final String info;

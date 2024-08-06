@@ -25,7 +25,7 @@ public class CreditAdjustSuccessMessageEvent extends BaseEvent<CreditAdjustSucce
 
     @Override
     public EventMessage<CreditAdjustSuccessMessage> buildEventMessage(CreditAdjustSuccessMessage data) {
-        return EventMessage.<CreditAdjustSuccessMessage>builder()
+        return EventMessage.<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage>builder()
                 .id(RandomStringUtils.randomNumeric(11))
                 .timestamp(new Date())
                 .data(data)
@@ -41,7 +41,7 @@ public class CreditAdjustSuccessMessageEvent extends BaseEvent<CreditAdjustSucce
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreditAdjustSuccessMessage{
+    public static class CreditAdjustSuccessMessage {
         /** 用户ID */
         private String userId;
         /** 订单ID */

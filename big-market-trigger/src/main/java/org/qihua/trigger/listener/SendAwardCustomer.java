@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.award.event.SendAwardMessageEvent;
 import org.qihua.domain.award.model.entity.DistributeAwardEntity;
 import org.qihua.domain.award.service.IAwardService;
-import org.qihua.domain.award.service.distribute.IDistributeAward;
 import org.qihua.types.event.BaseEvent;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -33,8 +32,7 @@ public class SendAwardCustomer {
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_award}"))
     public void listener(String message) {
         try {
-            log.info("监听用户奖品发送消息 topic:{} message:{}", topic, message);
-
+            log.info("监听用户奖品发送消息，发奖开始 topic: {} message: {}", topic, message);
             BaseEvent.EventMessage<SendAwardMessageEvent.SendAwardMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<SendAwardMessageEvent.SendAwardMessage>>() {
             }.getType());
             SendAwardMessageEvent.SendAwardMessage sendAwardMessage = eventMessage.getData();
@@ -47,9 +45,9 @@ public class SendAwardCustomer {
             distributeAwardEntity.setAwardConfig(sendAwardMessage.getAwardConfig());
             awardService.distributeAward(distributeAwardEntity);
 
+            log.info("监听用户奖品发送消息，发奖完成 topic: {} message: {}", topic, message);
         } catch (Exception e) {
-            log.error("监听用户奖品发送消息，消费失败 topic:{} message:{}", topic, message);
-            throw e;
+            log.error("监听用户奖品发送消息，消费失败 topic: {} message: {}", topic, message);
         }
     }
 }

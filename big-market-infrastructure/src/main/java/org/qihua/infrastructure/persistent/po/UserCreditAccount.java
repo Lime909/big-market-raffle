@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 public class UserCreditAccount {
     /** 自增ID */
-    private int id;
+    private Long id;
     /** 用户ID */
     private String userId;
     /** 总积分，显示总账户值 */

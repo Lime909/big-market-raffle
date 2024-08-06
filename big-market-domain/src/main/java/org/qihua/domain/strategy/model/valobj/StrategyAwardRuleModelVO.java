@@ -1,4 +1,4 @@
-package org.qihua.domain.strategy.model.volobj;
+package org.qihua.domain.strategy.model.valobj;
 
 import lombok.*;
 

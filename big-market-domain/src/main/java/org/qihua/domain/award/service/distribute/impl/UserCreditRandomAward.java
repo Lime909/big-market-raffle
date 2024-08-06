@@ -31,33 +31,33 @@ public class UserCreditRandomAward implements IDistributeAward {
         Integer awardId = distributeAwardEntity.getAwardId();
         String awardConfig = distributeAwardEntity.getAwardConfig();
         /** 配置如果为空就需要去数据库查询 */
-        if(StringUtils.isBlank(awardConfig)) {
-           awardConfig = repository.queryAwardConfig(awardId);
+        if (StringUtils.isBlank(awardConfig)) {
+            awardConfig = repository.queryAwardConfig(awardId);
         }
 
         String[] creditRange = awardConfig.split(Constants.SPLIT);
-        if(creditRange.length != 2) {
-            throw new RuntimeException("award_config 「" + awardConfig + "」 配置不是一个范围值 如1，100");
+        if (creditRange.length != 2) {
+            throw new RuntimeException("award_config 「" + awardConfig + "」配置不是一个范围值 如1，100");
         }
 
         /** 生成随机积分值 */
         BigDecimal creditAmount = generateRandom(new BigDecimal(creditRange[0]), new BigDecimal(creditRange[1]));
 
         /** 构建聚合对象 */
-        UserAwardRecordEntity userAwardRecordEntity = GiveOutPrizesAggregate.buildDistributeUserAwardRecord(
+        UserAwardRecordEntity userAwardRecordEntity = GiveOutPrizesAggregate.buildDistributeUserAwardRecordEntity(
                 distributeAwardEntity.getUserId(),
                 distributeAwardEntity.getOrderId(),
                 distributeAwardEntity.getAwardId(),
                 AwardStateVO.complete);
 
-        UserCreditAwardEntity userCreditAwardEntity = GiveOutPrizesAggregate.buildCreditUserAwardEntity(
+        UserCreditAwardEntity userCreditAwardEntity = GiveOutPrizesAggregate.buildUserCreditAwardEntity(
                 distributeAwardEntity.getUserId(),
                 creditAmount);
 
         GiveOutPrizesAggregate giveOutPrizesAggregate = new GiveOutPrizesAggregate();
         giveOutPrizesAggregate.setUserId(distributeAwardEntity.getUserId());
-        giveOutPrizesAggregate.setUserAwardRecord(userAwardRecordEntity);
-        giveOutPrizesAggregate.setUserCreditAward(userCreditAwardEntity);
+        giveOutPrizesAggregate.setUserAwardRecordEntity(userAwardRecordEntity);
+        giveOutPrizesAggregate.setUserCreditAwardEntity(userCreditAwardEntity);
 
         /** 存储发奖奖品 */
         repository.saveGiveOutPrizesAggregate(giveOutPrizesAggregate);
@@ -65,7 +65,7 @@ public class UserCreditRandomAward implements IDistributeAward {
     }
 
     private BigDecimal generateRandom(BigDecimal min, BigDecimal max) {
-        if(min.equals(max)) return min;
+        if (min.equals(max)) return min;
         BigDecimal randomBigDecimal = min.add(BigDecimal.valueOf(Math.random()).multiply(max.subtract(min)));
         return randomBigDecimal.round(new MathContext(3));
     }

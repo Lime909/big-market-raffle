@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
 import org.qihua.domain.strategy.model.entity.StrategyEntity;
 import org.qihua.domain.strategy.model.entity.StrategyRuleEntity;
-import org.qihua.domain.strategy.model.volobj.*;
+import org.qihua.domain.strategy.model.valobj.*;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import org.qihua.infrastructure.persistent.dao.*;
@@ -175,9 +175,7 @@ public class StrategyRepository implements IStrategyRepository {
         strategyAward.setAwardId(awardId);
         String ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
         if (ruleModels == null) return null;
-        return StrategyAwardRuleModelVO.builder()
-                .ruleModels(ruleModels)
-                .build();
+        return StrategyAwardRuleModelVO.builder().ruleModels(ruleModels).build();
     }
 
     @Override
@@ -347,9 +345,7 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Map<String, Integer> queryAwardRuleLockCount(String[] treeIds) {
-        if (treeIds == null || treeIds.length == 0) {
-            return new HashMap<>();
-        }
+        if (treeIds == null || treeIds.length == 0) return new HashMap<>();
         List<RuleTreeNode> ruleTreeNodes = ruleTreeNodeDao.queryRuleLocks(treeIds);
         Map<String, Integer> resultMap = new HashMap<>();
         for (RuleTreeNode node : ruleTreeNodes) {
@@ -367,6 +363,7 @@ public class StrategyRepository implements IStrategyRepository {
                 .userId(userId)
                 .activityId(activityId)
                 .build());
+        /** 返回计算使用量 = 总次数 - 剩余次数 */
         return raffleActivityAccount.getTotalCount() - raffleActivityAccount.getTotalCountSurplus();
     }
 
@@ -393,7 +390,7 @@ public class StrategyRepository implements IStrategyRepository {
         Map<String, List<Integer>> ruleWeightValues = strategyRuleEntity.getRuleWeightValues();
         Set<String> ruleWeightKeys = ruleWeightValues.keySet();
 
-        /** 3.对象转换 */
+        /** 3.遍历规则组装奖品配置*/
         for (String ruleWeightKey : ruleWeightKeys) {
             List<Integer> awardIds = ruleWeightValues.get(ruleWeightKey);
             List<RuleWeightVO.Award> awardList = new ArrayList<>();
@@ -401,10 +398,10 @@ public class StrategyRepository implements IStrategyRepository {
                 StrategyAward strategyAwardReq = new StrategyAward();
                 strategyAwardReq.setStrategyId(strategyId);
                 strategyAwardReq.setAwardId(awardId);
-                StrategyAward strategyAwardRes = strategyAwardDao.queryStrategyAward(strategyAwardReq);
+                StrategyAward strategyAward = strategyAwardDao.queryStrategyAward(strategyAwardReq);
                 awardList.add(RuleWeightVO.Award.builder()
-                        .awardId(strategyAwardRes.getAwardId())
-                        .awardTitle(strategyAwardRes.getAwardTitle())
+                        .awardId(strategyAward.getAwardId())
+                        .awardTitle(strategyAward.getAwardTitle())
                         .build());
             }
 

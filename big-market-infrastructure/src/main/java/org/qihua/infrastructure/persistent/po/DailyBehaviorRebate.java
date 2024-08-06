@@ -13,7 +13,7 @@ import java.util.Date;
 public class DailyBehaviorRebate {
 
     /** 自增ID */
-    private int id;
+    private Long id;
     /** 行为类型（sign-签到，openai_pay支付）*/
     private String behaviorType;
     /** 返利描述 */

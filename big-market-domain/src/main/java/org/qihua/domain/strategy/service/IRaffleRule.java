@@ -1,6 +1,6 @@
 package org.qihua.domain.strategy.service;
 
-import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
+import org.qihua.domain.strategy.model.valobj.RuleWeightVO;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package org.qihua.trigger.job;
 
 import lombok.extern.slf4j.Slf4j;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.service.IRaffleStock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

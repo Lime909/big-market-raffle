@@ -27,7 +27,7 @@ public class TradeEntity {
     /** 交易类型 */
     private TradeTypeVO tradeType;
     /** 交易金额 */
-    private BigDecimal tradeAmount;
+    private BigDecimal amount;
     /** 业务防重ID */
     private String outBusinessNo;
 

@@ -32,5 +32,4 @@ public interface IRaffleActivityAccountDao {
 
     RaffleActivityAccount queryAccountByUserId(RaffleActivityAccount raffleActivityAccount);
 
-    int updateOrderCompleted(RaffleActivityOrder raffleActivityOrderReq);
 }

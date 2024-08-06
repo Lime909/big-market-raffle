@@ -1,10 +1,9 @@
-package org.qihua.domain.strategy.model.volobj;
+package org.qihua.domain.strategy.model.valobj;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 

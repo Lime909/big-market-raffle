@@ -131,7 +131,7 @@ public class RaffleActivityController implements IRaffleActivityService {
     @Override
     public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO request) {
         try {
-            log.info("活动抽奖 userId:{} activityId:{}", request.getUserId(), request.getActivityId());
+            log.info("活动抽奖开始 userId:{} activityId:{}", request.getUserId(), request.getActivityId());
             /** 1.参数校验 */
             if (StringUtils.isBlank(request.getUserId()) || request.getActivityId() == null) {
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
@@ -162,6 +162,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .build();
             awardService.saveUserAwardRecord(userAwardRecord);
 
+            /** 5. 返回结果 */
             return Response.<ActivityDrawResponseDTO>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
@@ -188,11 +189,14 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     /**
      * 日历签到返利接口
+     *
+     * @param userId 用户ID
+     * @return 签到返利结果
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/calendar_sign_rebate">/api/v1/raffle/activity/calendar_sign_rebate</a>
-     *
-     * @param userId
-     * @return
+     * 入参：xiaofuge
+     * <p>
+     * curl -X POST http://localhost:8091/api/v1/raffle/activity/calendar_sign_rebate -d "userId=xiaofuge" -H "Content-Type: application/x-www-form-urlencoded"
      */
     @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)
     @Override
@@ -299,47 +303,9 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
-    @RequestMapping(value = "credit_pay_exchange_sku", method = RequestMethod.POST)
-    @Override
-    public Response<Boolean> creditPayExchangeSku(SkuProductShopCartRequestDTO request) {
-        try {
-            log.info("积分兑换商品开始 userId:{} sku:{}", request.getUserId(), request.getSku());
-            /** 1.创建兑换商品sku订单，outBusinessNo每次创建一个订单 */
-            UnpaidActivityOrderEntity unpaidActivityOrder = raffleActivityAccountQuotaService.createOrder(SkuRechargeEntity.builder()
-                    .userId(request.getUserId())
-                    .sku(request.getSku())
-                    .outBusinessNo(RandomStringUtils.randomNumeric(12))
-                    .orderTradeType(OrderTradeTypeVO.credit_pay_trade)
-                    .build());
 
-            log.info("积分兑换商品完成 userId:{} sku:{} outBusinessNo:{}", request.getUserId(), request.getSku(), unpaidActivityOrder.getOutBusinessNo());
 
-            /** 2.支付兑换商品 */
-            String orderId = creditAdjustService.createOrder(TradeEntity.builder()
-                    .userId(unpaidActivityOrder.getUserId())
-                    .tradeName(TradeNameVO.CONVERT_SKU)
-                    .tradeType(TradeTypeVO.REVERSE)
-                    .tradeAmount(unpaidActivityOrder.getPayAmount())
-                    .outBusinessNo(unpaidActivityOrder.getOutBusinessNo())
-                    .build());
-
-            log.info("积分兑换商品 支付订单完成 userId:{} sku:{} orderId:{}", request.getUserId(), request.getSku(), orderId);
-
-            return Response.<Boolean>builder()
-                    .code(ResponseCode.SUCCESS.getCode())
-                    .info(ResponseCode.SUCCESS.getInfo())
-                    .data(true)
-                    .build();
-        } catch (Exception e) {
-            log.error("积分兑换商品失败 userId:{} sku:{}", request.getUserId(), request.getSku(), e);
-            return Response.<Boolean>builder()
-                    .code(ResponseCode.UN_ERROR.getCode())
-                    .info(ResponseCode.UN_ERROR.getInfo())
-                    .data(false)
-                    .build();
-        }
-    }
-
+    @RequestMapping(value = "query_sku_product_list_by_activity_id", method = RequestMethod.POST)
     @Override
     public Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(Long activityId) {
         try {
@@ -349,7 +315,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                 throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
             }
             /** 2.查询商品 封装数据 */
-            List<SkuProductEntity> skuProductEntities = raffleActivitySkuProductService.querySkuProductByActivityId(activityId);
+            List<SkuProductEntity> skuProductEntities = raffleActivitySkuProductService.querySkuProductEntityListByActivityId(activityId);
             List<SkuProductResponseDTO> skuProductResponseDTOS = new ArrayList<>(skuProductEntities.size());
 
             for (SkuProductEntity skuProductEntity : skuProductEntities) {
@@ -384,9 +350,10 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
+    @RequestMapping(value = "query_user_credit_account", method = RequestMethod.POST)
     @Override
     public Response<BigDecimal> queryUserCreditAccount(String userId) {
-        try{
+        try {
             log.info("查询用户积分值 开始 userId:{}", userId);
             CreditAccountEntity creditAccountEntity = creditAdjustService.queryUserCreditAccount(userId);
             log.info("查询用户积分值 完成 userId:{} adjustAmount:{}", userId, creditAccountEntity.getAdjustAmount());
@@ -395,7 +362,7 @@ public class RaffleActivityController implements IRaffleActivityService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(creditAccountEntity.getAdjustAmount())
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("查询用户积分值 失败 userId:{}", userId, e);
             return Response.<BigDecimal>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
@@ -404,5 +371,50 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
+    @RequestMapping(value = "credit_pay_exchange_sku", method = RequestMethod.POST)
+    @Override
+    public Response<Boolean> creditPayExchangeSku(@RequestBody SkuProductShopCartRequestDTO request) {
+        try {
+            log.info("积分兑换商品开始 userId:{} sku:{}", request.getUserId(), request.getSku());
+            /** 1.创建兑换商品sku订单，outBusinessNo每次创建一个订单 */
+            UnpaidActivityOrderEntity unpaidActivityOrder = raffleActivityAccountQuotaService.createOrder(SkuRechargeEntity.builder()
+                    .userId(request.getUserId())
+                    .sku(request.getSku())
+                    .outBusinessNo(RandomStringUtils.randomNumeric(12))
+                    .orderTradeType(OrderTradeTypeVO.credit_pay_trade)
+                    .build());
 
+            log.info("积分兑换商品，创建订单完成 userId:{} sku:{} outBusinessNo:{}", request.getUserId(), request.getSku(), unpaidActivityOrder.getOutBusinessNo());
+
+            /** 2.支付兑换商品 */
+            String orderId = creditAdjustService.createOrder(TradeEntity.builder()
+                    .userId(unpaidActivityOrder.getUserId())
+                    .tradeName(TradeNameVO.CONVERT_SKU)
+                    .tradeType(TradeTypeVO.REVERSE)
+                    .amount(unpaidActivityOrder.getPayAmount().negate())
+                    .outBusinessNo(unpaidActivityOrder.getOutBusinessNo())
+                    .build());
+
+            log.info("积分兑换商品 支付订单完成 userId:{} sku:{} orderId:{}", request.getUserId(), request.getSku(), orderId);
+
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(true)
+                    .build();
+        } catch (AppException e) {
+            log.error("积分兑换商品失败 userId:{} activityId:{}",  request.getUserId(), request.getSku(), e);
+            return Response.<Boolean>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        } catch (Exception e) {
+            log.error("积分兑换商品失败 userId:{} sku:{}", request.getUserId(), request.getSku(), e);
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .data(false)
+                    .build();
+        }
+    }
 }

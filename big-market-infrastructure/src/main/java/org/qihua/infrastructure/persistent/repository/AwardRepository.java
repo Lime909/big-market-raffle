@@ -97,7 +97,7 @@ public class AwardRepository implements IAwardRepository {
                     taskDao.insert(task);
                     /** 更新抽奖单 */
                     int count = userRaffleOrderDao.updateUserRaffleOrderStateUsed(userRaffleOrderReq);
-                    if(count != 1){
+                    if (count != 1) {
                         status.setRollbackOnly();
                         log.error("写入中奖记录，用户抽奖单已使用过，不可重复抽奖 userId:{} activityId:{} awardId:{}", userId, activityId, awardId);
                         throw new AppException(ResponseCode.ACTIVITY_ORDER_ERROR.getCode(), ResponseCode.ACTIVITY_ORDER_ERROR.getInfo());
@@ -118,8 +118,9 @@ public class AwardRepository implements IAwardRepository {
             eventPublisher.publish(task.getTopic(), task.getMessage());
             /** 更新数据库记录，task任务表 */
             taskDao.updateTaskSendMessageCompleted(task);
+            log.info("写入中奖记录，发送MQ消息完成 userId: {} orderId:{} topic: {}", userId, userAwardRecordEntity.getOrderId(), task.getTopic());
         } catch (Exception e) {
-            log.error("写入中奖记录，发送MQ消息失败 userId:{} topic:{}", userId, task.getTopic());
+            log.error("写入中奖记录，发送MQ消息失败 userId: {} topic: {}", userId, task.getTopic());
             taskDao.updateTaskSendMessageFail(task);
         }
     }
@@ -129,7 +130,7 @@ public class AwardRepository implements IAwardRepository {
         /** 优先从缓存中获取 */
         String cacheKey = Constants.RedisKey.AWARD_CONFIG_KEY + awardId;
         String awardConfig = redisService.getValue(cacheKey);
-        if(awardConfig != null) return awardConfig;
+        if (awardConfig != null) return awardConfig;
         /** 从数据库中获取 */
         awardConfig = awardDao.queryAwardConfigByAwardId(awardId);
         redisService.setValue(cacheKey, awardConfig);
@@ -139,8 +140,8 @@ public class AwardRepository implements IAwardRepository {
     @Override
     public void saveGiveOutPrizesAggregate(GiveOutPrizesAggregate giveOutPrizesAggregate) {
         String userId = giveOutPrizesAggregate.getUserId();
-        UserAwardRecordEntity userAwardRecordEntity = giveOutPrizesAggregate.getUserAwardRecord();
-        UserCreditAwardEntity userCreditAwardEntity = giveOutPrizesAggregate.getUserCreditAward();
+        UserCreditAwardEntity userCreditAwardEntity = giveOutPrizesAggregate.getUserCreditAwardEntity();
+        UserAwardRecordEntity userAwardRecordEntity = giveOutPrizesAggregate.getUserAwardRecordEntity();
 
         /** 更新发奖记录 */
         UserAwardRecord userAwardRecordReq = new UserAwardRecord();
@@ -154,12 +155,12 @@ public class AwardRepository implements IAwardRepository {
         userCreditAccountReq.setAvailableAmount(userCreditAwardEntity.getCreditAmount());
         userCreditAccountReq.setAccountStatus(AccountStatusVO.open.getCode());
 
-        RLock lock = redisService.getLock(Constants.RedisKey.ACTIVITY_ACCOUNT_LOCK_KEY + userId);
-        try{
+        RLock lock = redisService.getLock(Constants.RedisKey.ACTIVITY_ACCOUNT_LOCK + userId);
+        try {
             lock.lock(3, TimeUnit.SECONDS);
-            dbRouter.doRouter(userId);
+            dbRouter.doRouter(giveOutPrizesAggregate.getUserId());
             transactionTemplate.execute(status -> {
-                try{
+                try {
                     /** 更新发奖记录「存在就更新」「首次就插入」*/
                     UserCreditAccount userCreditAccountRes = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
                     if (userCreditAccountRes == null) {
@@ -170,19 +171,18 @@ public class AwardRepository implements IAwardRepository {
 
                     /** 更新奖品记录「发奖完成」*/
                     int updateAwardCount = userAwardRecordDao.updateAwardRecordCompletedState(userAwardRecordReq);
-                    if(updateAwardCount == 0){
+                    if (updateAwardCount == 0) {
                         log.error("更新中奖记录，重复更新拦截 userId:{} giveOutPrizesAggregate:{}", userId, JSON.toJSONString(giveOutPrizesAggregate));
                         status.setRollbackOnly();
                     }
-
                     return 1;
-                }catch (DuplicateKeyException e) {
+                } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.error("更新中奖记录，唯一索引冲突 userId:{}", userId, e);
                     throw new AppException(ResponseCode.INDEX_DUP.getCode(), e);
                 }
             });
-        }finally {
+        } finally {
             dbRouter.clear();
             lock.unlock();
         }
@@ -193,7 +193,7 @@ public class AwardRepository implements IAwardRepository {
         /** 优先从缓存中获取 */
         String cacheKey = Constants.RedisKey.AWARD_KEY_KEY + awardId;
         String awardKey = redisService.getValue(cacheKey);
-        if(awardKey != null) return awardKey;
+        if (awardKey != null) return awardKey;
         /** 从数据库中读取 */
         awardKey = awardDao.queryAwardKeyByAwardId(awardId);
         redisService.setValue(cacheKey, awardKey);

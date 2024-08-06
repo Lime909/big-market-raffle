@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
-import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.model.valobj.RuleWeightVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.service.IRaffleRule;
 import org.qihua.domain.strategy.service.IRaffleStock;
 import org.qihua.domain.strategy.service.IRaffleStrategy;
@@ -17,7 +17,6 @@ import org.qihua.domain.strategy.service.rule.chain.impl.RuleWeightLogicChain;
 import org.qihua.domain.strategy.service.rule.tree.impl.RuleLockLogicTreeNode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
 import java.util.List;

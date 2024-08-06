@@ -7,7 +7,7 @@ import org.qihua.domain.activity.service.IRaffleActivityAccountQuotaService;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
-import org.qihua.domain.strategy.model.volobj.RuleWeightVO;
+import org.qihua.domain.strategy.model.valobj.RuleWeightVO;
 import org.qihua.domain.strategy.service.IRaffleAward;
 import org.qihua.domain.strategy.service.IRaffleRule;
 import org.qihua.domain.strategy.service.IRaffleStrategy;
@@ -47,7 +47,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
 
     /**
      * 策略装配，将策略信息装配到缓存中
-     * <a href="http://localhost:8091/api/v1/raffle/strategy/strategy_armory">/api/v1/raffle/strategy_armory</a>
+     * <a href="http://localhost:8091/api/v1/raffle/strategy/strategy_armory">/api/v1/raffle/strategy/strategy_armory</a>
      *
      * @param strategyId 策略ID
      * @return 装配结果
@@ -160,10 +160,10 @@ public class RaffleStrategyController implements IRaffleStrategyService {
             Integer userActivityAccountTotalUseCount = raffleActivityAccountQuotaService.queryRaffleActivityAccountPartakeCount(request.getActivityId(), request.getUserId());
 
             /** 3.查询规则 */
-            List<RuleWeightVO> ruleWeightVOS = raffleRule.queryAwardRuleWeightByActivityId(request.getActivityId());
+            List<RuleWeightVO> ruleWeightVOList = raffleRule.queryAwardRuleWeightByActivityId(request.getActivityId());
 
             List<RaffleStrategyRuleWeightResponseDTO> raffleStrategyRuleWeightResponseDTOList = new ArrayList<>();
-            for (RuleWeightVO ruleWeightVO : ruleWeightVOS) {
+            for (RuleWeightVO ruleWeightVO : ruleWeightVOList) {
                 List<RaffleStrategyRuleWeightResponseDTO.StrategyAward> strategyAwards = new ArrayList<>();
                 List<RuleWeightVO.Award> awardList = ruleWeightVO.getAwardList();
                 for (RuleWeightVO.Award award : awardList) {

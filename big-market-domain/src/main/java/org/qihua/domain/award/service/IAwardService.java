@@ -15,7 +15,6 @@ public interface IAwardService {
 
     /**
      * 配送发货奖品
-     * @param distributeAwardEntity
      */
     void distributeAward(DistributeAwardEntity distributeAwardEntity);
 

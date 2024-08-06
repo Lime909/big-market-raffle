@@ -1,8 +1,8 @@
 package org.qihua.domain.strategy.service.rule.tree.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
 import org.qihua.domain.strategy.service.rule.tree.ILogicTreeNode;

@@ -1,6 +1,6 @@
 package org.qihua.domain.strategy.service;
 
-import org.qihua.domain.strategy.model.volobj.StrategyAwardStockKeyVO;
+import org.qihua.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
 /**
  * @author Lime

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.qihua.domain.strategy.model.volobj.*;
+import org.qihua.domain.strategy.model.valobj.*;
 import org.qihua.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import org.qihua.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import org.springframework.boot.test.context.SpringBootTest;

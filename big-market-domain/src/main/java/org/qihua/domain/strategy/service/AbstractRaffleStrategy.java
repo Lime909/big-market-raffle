@@ -5,11 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.qihua.domain.strategy.model.entity.RaffleAwardEntity;
 import org.qihua.domain.strategy.model.entity.RaffleFactorEntity;
 import org.qihua.domain.strategy.model.entity.StrategyAwardEntity;
-import org.qihua.domain.strategy.model.volobj.RuleLogicCheckTypeVO;
-import org.qihua.domain.strategy.model.volobj.StrategyAwardRuleModelVO;
 import org.qihua.domain.strategy.repository.IStrategyRepository;
 import org.qihua.domain.strategy.service.armory.IStrategyDispatch;
-import org.qihua.domain.strategy.service.rule.chain.ILogicChain;
 import org.qihua.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import org.qihua.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import org.qihua.types.enums.ResponseCode;
@@ -58,6 +55,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         if (strategyId == null || StringUtils.isBlank(userId)) {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
+        log.info("抽奖策略计算 userId:{} strategyId:{}", userId, strategyId);
 
         /** 2.责任链抽奖计算 */
         DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = raffleLogicChain(userId, strategyId);

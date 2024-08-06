@@ -24,11 +24,11 @@ public class GiveOutPrizesAggregate {
     /** 用户ID */
     private String userId;
     /** 用户发奖记录 */
-    private UserAwardRecordEntity userAwardRecord;
+    private UserAwardRecordEntity userAwardRecordEntity;
     /** 用户积分奖品 */
-    private UserCreditAwardEntity userCreditAward;
+    private UserCreditAwardEntity userCreditAwardEntity;
 
-    public static UserAwardRecordEntity buildDistributeUserAwardRecord(String userId, String orderId, Integer awardId, AwardStateVO awardState) {
+    public static UserAwardRecordEntity buildDistributeUserAwardRecordEntity(String userId, String orderId, Integer awardId, AwardStateVO awardState) {
         UserAwardRecordEntity userAwardRecord = new UserAwardRecordEntity();
         userAwardRecord.setUserId(userId);
         userAwardRecord.setOrderId(orderId);
@@ -37,7 +37,7 @@ public class GiveOutPrizesAggregate {
         return userAwardRecord;
     }
 
-    public static UserCreditAwardEntity buildCreditUserAwardEntity(String userId, BigDecimal creditAmount) {
+    public static UserCreditAwardEntity buildUserCreditAwardEntity(String userId, BigDecimal creditAmount) {
         UserCreditAwardEntity userCreditAward = new UserCreditAwardEntity();
         userCreditAward.setUserId(userId);
         userCreditAward.setCreditAmount(creditAmount);
