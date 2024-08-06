@@ -33,7 +33,7 @@ public class CreditAdjustServiceTest {
         tradeEntity.setUserId("xiaofuge");
         tradeEntity.setTradeName(TradeNameVO.REBATE);
         tradeEntity.setTradeType(TradeTypeVO.FORWARD);
-        tradeEntity.setTradeAmount(new BigDecimal("10.19"));
+        tradeEntity.setAmount(new BigDecimal("10.19"));
         tradeEntity.setOutBusinessNo("100009900001");
         creditAdjustService.createOrder(tradeEntity);
     }
@@ -44,7 +44,7 @@ public class CreditAdjustServiceTest {
         tradeEntity.setUserId("xiaofuge");
         tradeEntity.setTradeName(TradeNameVO.REBATE);
         tradeEntity.setTradeType(TradeTypeVO.REVERSE);
-        tradeEntity.setTradeAmount(new BigDecimal("-20.19"));
+        tradeEntity.setAmount(new BigDecimal("-20.19"));
         tradeEntity.setOutBusinessNo("100009900002");
         creditAdjustService.createOrder(tradeEntity);
     }
@@ -55,7 +55,7 @@ public class CreditAdjustServiceTest {
         tradeEntity.setUserId("xiaofuge");
         tradeEntity.setTradeName(TradeNameVO.CONVERT_SKU);
         tradeEntity.setTradeType(TradeTypeVO.REVERSE);
-        tradeEntity.setTradeAmount(new BigDecimal("-1.68"));
+        tradeEntity.setAmount(new BigDecimal("-1.68"));
         tradeEntity.setOutBusinessNo("70009240609002");
         creditAdjustService.createOrder(tradeEntity);
 
